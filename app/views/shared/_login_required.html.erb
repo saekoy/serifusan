@@ -1,0 +1,13 @@
+<%#
+  Required local:
+    message: String — 未ログイン時の説明文
+%>
+<div class="flex-1 flex flex-col items-center justify-center px-6 py-10 text-center">
+  <div class="text-5xl mb-4">🔒</div>
+  <p class="text-sm text-[#1F1F1F] font-bold mb-2">ログインが必要です</p>
+  <p class="text-xs text-[#888888] mb-6 leading-relaxed"><%= message %></p>
+  <a href="#"
+     class="inline-flex items-center justify-center px-6 py-2.5 bg-[#5B5BD6] text-white text-sm font-bold rounded-full shadow-sm hover:bg-[#4A4AC7]">
+    ログインする
+  </a>
+</div>

@@ -1,0 +1,16 @@
+<% content_for :title, '履歴' %>
+
+<header class="px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
+  <h1 class="text-base font-bold">履歴</h1>
+</header>
+
+<% if @logged_in %>
+  <div class="flex-1 px-4 py-6 text-sm text-[#888888]">
+    まだ生成履歴はありません。
+  </div>
+<% else %>
+  <%= render 'shared/login_required',
+             message: '過去に生成したセリフは、ログインすると履歴から見返せます。' %>
+<% end %>
+
+<%= render 'shared/bottom_nav', active: :history %>

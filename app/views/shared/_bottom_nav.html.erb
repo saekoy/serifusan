@@ -5,9 +5,9 @@
 <nav class="sticky bottom-0 bg-[#FAFAF8] border-t border-[#E0DDD9] flex justify-around py-2 flex-shrink-0">
   <% items = [
     { key: :home,    label: 'ホーム',         icon: '🏠', path: root_path },
-    { key: :saved,   label: 'お気に入り',     icon: '🔖', path: '#' },
-    { key: :history, label: '履歴',           icon: '🕐', path: '#' },
-    { key: :about,   label: 'アプリについて', icon: '⚙️', path: '#' }
+    { key: :saved,   label: 'お気に入り',     icon: '🔖', path: favorites_path },
+    { key: :history, label: '履歴',           icon: '🕐', path: histories_path },
+    { key: :about,   label: 'アプリについて', icon: '⚙️', path: about_path }
   ] %>
   <% items.each do |item| %>
     <%= link_to item[:path],

@@ -1,0 +1,42 @@
+<% content_for :title, 'アプリについて' %>
+
+<header class="px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
+  <h1 class="text-base font-bold">アプリについて</h1>
+</header>
+
+<div class="flex-1 overflow-y-auto px-4 py-5 space-y-6 text-sm leading-relaxed">
+  <section>
+    <h2 class="text-sm font-bold mb-2">つくったきっかけ</h2>
+    <p class="text-[#1F1F1F]">
+      配信のネタ出しに悩むVライバー向けに、ワンタップでセリフの候補を出せる小さなツールとしてつくりました。
+    </p>
+  </section>
+
+  <section>
+    <h2 class="text-sm font-bold mb-2">AIの利用について</h2>
+    <p class="text-[#1F1F1F]">
+      セリフの生成にはGoogleのGemini APIを使っています。生成結果はAIが作った文章なので、配信で使う前に内容を確認してください。
+    </p>
+  </section>
+
+  <section>
+    <h2 class="text-sm font-bold mb-2">お問い合わせ</h2>
+    <p class="text-[#1F1F1F] mb-2">
+      ご意見・不具合のご報告はGoogleフォームからお願いします。
+    </p>
+    <a href="#" class="inline-flex items-center gap-1 text-[#5B5BD6] text-xs font-bold">
+      お問い合わせフォーム →
+    </a>
+  </section>
+
+  <section>
+    <h2 class="text-sm font-bold mb-2">アカウント</h2>
+    <% if @logged_in %>
+      <p class="text-[#1F1F1F]">ログイン中です。</p>
+    <% else %>
+      <p class="text-[#888888]">現在ログインしていません。</p>
+    <% end %>
+  </section>
+</div>
+
+<%= render 'shared/bottom_nav', active: :about %>

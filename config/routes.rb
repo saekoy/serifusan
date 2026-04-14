@@ -14,4 +14,8 @@ Rails.application.routes.draw do
 
   post '/generations', to: 'generations#create'
   get '/result',        to: 'generations#show', as: :result
+
+  get '/favorites', to: 'favorites#index', as: :favorites
+  get '/history',   to: 'histories#index', as: :histories
+  get '/about',     to: 'pages#about',     as: :about
 end

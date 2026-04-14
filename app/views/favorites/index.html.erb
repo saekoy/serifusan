@@ -1,0 +1,16 @@
+<% content_for :title, 'お気に入り' %>
+
+<header class="px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
+  <h1 class="text-base font-bold">お気に入り</h1>
+</header>
+
+<% if @logged_in %>
+  <div class="flex-1 px-4 py-6 text-sm text-[#888888]">
+    保存したセリフはまだありません。
+  </div>
+<% else %>
+  <%= render 'shared/login_required',
+             message: 'お気に入りに保存したセリフは、ログインするといつでも見返せます。' %>
+<% end %>
+
+<%= render 'shared/bottom_nav', active: :saved %>
