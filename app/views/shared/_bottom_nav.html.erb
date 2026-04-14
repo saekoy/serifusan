@@ -1,0 +1,19 @@
+<%#
+  Required local:
+    active: Symbol — :home / :saved / :history / :about
+%>
+<nav class="sticky bottom-0 bg-[#FAFAF8] border-t border-[#E0DDD9] flex justify-around py-2 flex-shrink-0">
+  <% items = [
+    { key: :home,    label: 'ホーム',         icon: '🏠', path: root_path },
+    { key: :saved,   label: 'お気に入り',     icon: '🔖', path: '#' },
+    { key: :history, label: '履歴',           icon: '🕐', path: '#' },
+    { key: :about,   label: 'アプリについて', icon: '⚙️', path: '#' }
+  ] %>
+  <% items.each do |item| %>
+    <%= link_to item[:path],
+                class: "flex flex-col items-center gap-0.5 px-3 py-1 text-xs #{item[:key] == active ? 'text-[#5B5BD6] font-bold' : 'text-[#888888]'}" do %>
+      <span class="text-lg leading-none"><%= item[:icon] %></span>
+      <span><%= item[:label] %></span>
+    <% end %>
+  <% end %>
+</nav>
