@@ -40,4 +40,22 @@ RSpec.describe 'Home', type: :request do
       end
     end
   end
+
+  describe 'flashメッセージの表示' do
+    it 'flash[:alert] があればアラートバナーが表示される' do
+      allow_any_instance_of(GeminiService).to receive(:call).and_return([])
+      post '/generations', params: { genre: 'romance', theme: 'test' }
+      follow_redirect!
+      expect(response.body).to include('セリフ生成に失敗しました')
+    end
+
+    it '3回生成後の4回目は上限超過アラートが表示される' do
+      fake_serifus = (1..10).map { |i| "セリフ#{i}" }
+      allow_any_instance_of(GeminiService).to receive(:call).and_return(fake_serifus)
+      3.times { post '/generations', params: { genre: 'romance', theme: 'test' } }
+      post '/generations', params: { genre: 'romance', theme: 'test' }
+      follow_redirect!
+      expect(response.body).to include('今日の生成回数を使い切りました')
+    end
+  end
 end

@@ -25,6 +25,11 @@
 
   <body class="min-h-screen bg-[#F2F0ED] text-[#1F1F1F]">
     <main class="max-w-md mx-auto min-h-screen bg-[#FAFAF8] flex flex-col border border-[#E0DDD9] md:my-5 md:rounded-lg md:shadow-sm overflow-hidden">
+      <% flash.each do |type, msg| %>
+        <div class="px-4 py-2.5 text-xs border-b <%= type.to_s == 'alert' ? 'bg-[#FEF2F2] text-[#991B1B] border-[#FCA5A5]' : 'bg-[#F0F9FF] text-[#075985] border-[#7DD3FC]' %>">
+          <%= msg %>
+        </div>
+      <% end %>
       <%= yield %>
     </main>
   </body>
