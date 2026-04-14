@@ -11,4 +11,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "home#index"
+
+  post '/generations', to: 'generations#create'
+  get '/result',        to: 'generations#show', as: :result
 end

@@ -1,0 +1,54 @@
+<% content_for :title, 'セリフ一覧 - セリフさん' %>
+
+<%# ===== 結果ヘッダー ===== %>
+<header class="flex items-center justify-between px-5 pt-6 pb-3 border-b border-[#E0DDD9] flex-shrink-0 bg-[#FAFAF8]">
+  <h1 class="text-xl font-bold">セリフ一覧</h1>
+  <% if @genre %>
+    <span class="text-[11px] text-[#777777] bg-[#FAFAF8] border border-[#DDDBD8] px-2.5 py-0.5 rounded-lg">
+      <%= @genre[:emoji] %> <%= @genre[:name] %>
+    </span>
+  <% end %>
+</header>
+
+<%# ===== 未ログイン時: ログイン誘導バナー ===== %>
+<% unless @logged_in %>
+  <div class="bg-[#F0EFEC] border-b border-[#E0DDD9] px-4 py-2 text-xs text-[#555555] flex items-center gap-1.5 flex-shrink-0">
+    🔒 お気に入り保存はログインが必要です
+  </div>
+<% end %>
+
+<%# ===== セリフ一覧 ===== %>
+<div class="flex-1 px-[18px] py-3 pb-4 overflow-y-auto">
+  <ul class="flex flex-col gap-1.5">
+    <% @serifus.each_with_index do |serifu, i| %>
+      <li class="bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg p-3 shadow-sm flex flex-col gap-2">
+        <div class="flex items-start gap-2">
+          <span class="w-5 h-5 rounded-full bg-[#DDDBD8] text-[#555555] text-[11px] font-semibold flex items-center justify-center flex-shrink-0 mt-0.5">
+            <%= i + 1 %>
+          </span>
+          <p class="text-sm leading-relaxed flex-1"><%= serifu %></p>
+        </div>
+        <div class="flex gap-1.5 justify-end">
+          <% if @logged_in %>
+            <button type="button" class="text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6]">🔖 保存</button>
+          <% else %>
+            <%= link_to '🔖 保存', '#',
+                        class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6]' %>
+          <% end %>
+          <button type="button"
+                  class="text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6]"
+                  data-serifu="<%= serifu %>">❐ コピー</button>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%# ===== フッター ===== %>
+<footer class="flex gap-2 p-3 border-t border-[#E0DDD9] bg-[#FAFAF8] flex-shrink-0">
+  <%= link_to '↩ もう一回', root_path,
+              class: 'flex-1 py-3 text-center bg-[#FAFAF8] border border-[#E0DDD9] text-[#555555] text-sm font-semibold rounded-lg hover:opacity-90' %>
+  <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape("セリフさんで生成したセリフ\n#セリフさん") %>"
+     target="_blank" rel="noopener"
+     class="flex-1 py-3 text-center bg-black text-white text-sm font-bold rounded-lg hover:opacity-85">𝕏 シェア</a>
+</footer>
