@@ -4,38 +4,56 @@
   <h1 class="text-base font-bold">アプリについて</h1>
 </header>
 
-<div class="flex-1 overflow-y-auto px-4 py-5 space-y-6 text-sm leading-relaxed">
-  <section>
-    <h2 class="text-sm font-bold mb-2">つくったきっかけ</h2>
-    <p class="text-[#1F1F1F]">
-      配信のネタ出しに悩むVライバー向けに、ワンタップでセリフの候補を出せる小さなツールとしてつくりました。
-    </p>
-  </section>
-
-  <section>
-    <h2 class="text-sm font-bold mb-2">AIの利用について</h2>
-    <p class="text-[#1F1F1F]">
-      セリフの生成にはGoogleのGemini APIを使っています。生成結果はAIが作った文章なので、配信で使う前に内容を確認してください。
-    </p>
-  </section>
-
-  <section>
-    <h2 class="text-sm font-bold mb-2">お問い合わせ</h2>
-    <p class="text-[#1F1F1F] mb-2">
-      ご意見・不具合のご報告はGoogleフォームからお願いします。
-    </p>
-    <a href="#" class="inline-flex items-center gap-1 text-[#5B5BD6] text-xs font-bold">
-      お問い合わせフォーム →
-    </a>
-  </section>
-
-  <section>
-    <h2 class="text-sm font-bold mb-2">アカウント</h2>
+<div class="flex-1 overflow-y-auto px-4 py-5">
+  <%# ===== アカウント ===== %>
+  <section class="mb-6">
+    <h2 class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase mb-2">👤 アカウント</h2>
     <% if @logged_in %>
-      <p class="text-[#1F1F1F]">ログイン中です。</p>
+      <div class="flex items-center gap-3 bg-white border-[1.5px] border-[#EDD8FF] rounded-2xl px-4 py-3 mb-2.5 shadow-[0_2px_8px_rgba(168,85,247,0.06)]">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#A855F7] to-[#EC4899] flex items-center justify-center text-xl">🐱</div>
+        <div class="flex-1">
+          <div class="text-sm font-bold text-[#3B1464]">ユーザー名</div>
+          <div class="text-xs text-[#B07BD4]">Google でログイン中</div>
+        </div>
+      </div>
+      <button type="button"
+              class="w-full border border-[#F9A8D4] text-[#EC4899] text-sm font-bold rounded-full py-2.5 bg-white">
+        ログアウト
+      </button>
     <% else %>
-      <p class="text-[#888888]">現在ログインしていません。</p>
+      <div class="bg-white border-[1.5px] border-[#EDD8FF] rounded-2xl px-4 py-3.5 text-center shadow-[0_2px_8px_rgba(168,85,247,0.06)]">
+        <div class="text-[13px] text-[#B07BD4] mb-3">ログインしていません</div>
+        <a href="#"
+           class="block w-full bg-[#5B5BD6] text-white text-sm font-semibold rounded-lg py-[11px] text-center hover:opacity-90">
+          ログインする
+        </a>
+      </div>
     <% end %>
+  </section>
+
+  <%# ===== つくったきっかけ ===== %>
+  <section class="mb-6">
+    <h2 class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase mb-2">✦ つくったきっかけ</h2>
+    <p class="text-[13px] text-[#555555] leading-[1.8]">
+      セリフ枠配信をするライバーさんが、ネタ切れせず楽しく配信できるように作りました。テーマとジャンルを入れるだけで、AIがキャラに合ったセリフを提案します。
+    </p>
+  </section>
+
+  <%# ===== AIの利用について ===== %>
+  <section class="mb-6">
+    <h2 class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase mb-2">✦ AIの利用について</h2>
+    <p class="text-[13px] text-[#555555] leading-[1.8]">
+      セリフの生成にはGoogle Gemini APIを使用しています。入力内容がGoogleの学習に利用されない設定で運用しています。
+    </p>
+  </section>
+
+  <%# ===== お問い合わせ ===== %>
+  <section class="mb-6">
+    <h2 class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase mb-2">✦ お問い合わせ</h2>
+    <a href="#"
+       class="block w-full mt-1.5 bg-[#FAFAF8] text-[#555555] text-sm font-semibold rounded-lg py-[13px] text-center border border-[#E0DDD9] hover:opacity-90">
+      お問い合わせフォーム
+    </a>
   </section>
 </div>
 
