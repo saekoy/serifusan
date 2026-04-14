@@ -39,6 +39,11 @@ RSpec.describe 'Home', type: :request do
         expect(response.body).to include(label)
       end
     end
+
+    it 'ローディングオーバーレイ（hidden状態）がレイアウトに埋め込まれている' do
+      expect(response.body).to include('id="loading-overlay"')
+      expect(response.body).to include('セリフを考えているよ')
+    end
   end
 
   describe 'flashメッセージの表示' do

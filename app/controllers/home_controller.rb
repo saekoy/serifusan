@@ -1,10 +1,8 @@
 class HomeController < ApplicationController
-  DAILY_LIMIT = 3
-
   def index
     @genres = Genre.all
-    @gen_remaining = DAILY_LIMIT # TODO: セッションベースのカウントをあとで実装
-    @daily_limit = DAILY_LIMIT
-    @logged_in = false # TODO: Firebase Auth導入後に差し替え
+    @daily_limit = DAILY_GENERATION_LIMIT
+    @gen_remaining = @daily_limit - generation_count_today
+    @logged_in = logged_in?
   end
 end

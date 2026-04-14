@@ -1,12 +1,8 @@
 class GenerationsController < ApplicationController
-  DAILY_LIMIT = 3
-
   def create
-    unless logged_in?
-      if generation_count_today >= DAILY_LIMIT
-        redirect_to root_path, alert: '今日の生成回数を使い切りました。ログインすると無制限になります。'
-        return
-      end
+    if !logged_in? && generation_count_today >= DAILY_GENERATION_LIMIT
+      redirect_to root_path, alert: '今日の生成回数を使い切りました。ログインすると無制限になります。'
+      return
     end
 
     serifus = GeminiService.new(
@@ -38,29 +34,9 @@ class GenerationsController < ApplicationController
     @generation = session[:latest_generation]
     return redirect_to(root_path) if @generation.blank?
 
-    @genre    = Genre.find(@generation['genre'])
-    @theme    = @generation['theme']
-    @serifus  = @generation['serifus']
+    @genre     = Genre.find(@generation['genre'])
+    @theme     = @generation['theme']
+    @serifus   = @generation['serifus']
     @logged_in = logged_in?
-  end
-
-  private
-
-  def logged_in?
-    false # TODO: Firebase Auth導入後に差し替え
-  end
-
-  def generation_count_today
-    return 0 if session[:gen_count_date] != Date.today.to_s
-
-    session[:gen_count].to_i
-  end
-
-  def increment_generation_count
-    if session[:gen_count_date] != Date.today.to_s
-      session[:gen_count_date] = Date.today.to_s
-      session[:gen_count] = 0
-    end
-    session[:gen_count] = session[:gen_count].to_i + 1
   end
 end
