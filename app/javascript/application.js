@@ -1,5 +1,7 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 
+import "firebase"
+
 // 生成フォーム送信時にローディングオーバーレイを表示
 document.addEventListener('turbo:submit-start', (event) => {
   const form = event.target

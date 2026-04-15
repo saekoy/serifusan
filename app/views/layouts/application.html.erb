@@ -21,6 +21,9 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <%# Google Identity Services（Firebase Auth の認証トークン取得に利用） %>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
 
   <body class="min-h-screen bg-[#F2F0ED] text-[#1F1F1F]">

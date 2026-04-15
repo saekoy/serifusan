@@ -7,8 +7,9 @@
     <p class="text-xs text-[#888888] mt-0.5">セリフ枠のセリフをAIが考えてくれる</p>
   </div>
   <% unless @logged_in %>
-    <%= link_to 'ログイン', '#',
-                class: 'px-4 py-1.5 bg-[#5B5BD6] text-white rounded-lg text-sm font-bold whitespace-nowrap hover:opacity-90' %>
+    <div data-gis-button class="flex justify-end">
+      <span class="text-xs text-[#5B5BD6] font-bold">ログイン</span>
+    </div>
   <% end %>
 </header>
 
