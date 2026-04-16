@@ -15,9 +15,11 @@ Rails.application.routes.draw do
   post '/generations', to: 'generations#create'
   get '/result',        to: 'generations#show', as: :result
 
-  get '/favorites', to: 'favorites#index', as: :favorites
-  get '/history',   to: 'histories#index', as: :histories
-  get '/about',     to: 'pages#about',     as: :about
+  get    '/favorites',     to: 'favorites#index',   as: :favorites
+  post   '/favorites',     to: 'favorites#create'
+  delete '/favorites/:id', to: 'favorites#destroy', as: :favorite
+  get    '/history',       to: 'histories#index',   as: :histories
+  get    '/about',         to: 'pages#about',       as: :about
 
   post   '/sessions', to: 'sessions#create'
   delete '/sessions', to: 'sessions#destroy'

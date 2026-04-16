@@ -1,10 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe 'Favorites', type: :request do
-  describe 'GET /favorites' do
-    before { get '/favorites' }
+  let(:verified_payload) do
+    { uid: 'uid-1', email: 'a@example.com', display_name: 'A', photo_url: nil, provider: 'google.com' }
+  end
 
+  def sign_in!
+    allow(FirebaseTokenVerifier).to receive(:verify).and_return(verified_payload)
+    post '/sessions', params: { id_token: 'valid' }
+  end
+
+  describe 'GET /favorites' do
     context '未ログイン時' do
+      before { get '/favorites' }
+
       it '200を返す' do
         expect(response).to have_http_status(:success)
       end
@@ -19,6 +28,130 @@ RSpec.describe 'Favorites', type: :request do
 
       it 'ボトムナビが表示される' do
         expect(response.body).to include('お気に入り')
+      end
+    end
+
+    context 'ログイン時' do
+      before { sign_in! }
+
+      context 'お気に入りがない場合' do
+        it '空メッセージを表示する' do
+          get '/favorites'
+          expect(response.body).to include('まだお気に入りはありません')
+        end
+      end
+
+      context 'お気に入りがある場合' do
+        let(:user) { User.find_by(firebase_uid: 'uid-1') }
+
+        before do
+          Favorite.create!(user: user, serifu: 'ずっとそばにいてね', genre: 'romance', created_at: 2.days.ago)
+          Favorite.create!(user: user, serifu: '別に心配じゃないし', genre: 'tsundere', created_at: 1.day.ago)
+        end
+
+        it 'セリフを表示する' do
+          get '/favorites'
+          expect(response.body).to include('ずっとそばにいてね')
+          expect(response.body).to include('別に心配じゃないし')
+        end
+
+        it 'ジャンル名を表示する' do
+          get '/favorites'
+          expect(response.body).to include('恋愛・甘々')
+          expect(response.body).to include('ツンデレ')
+        end
+
+        it '新しい順に表示する' do
+          get '/favorites'
+          pos_new = response.body.index('別に心配じゃないし')
+          pos_old = response.body.index('ずっとそばにいてね')
+          expect(pos_new).to be < pos_old
+        end
+
+        it '他ユーザーのお気に入りは表示しない' do
+          other = User.create!(firebase_uid: 'other', email: 'b@example.com')
+          Favorite.create!(user: other, serifu: '他人のひみつセリフ', genre: 'fantasy')
+          get '/favorites'
+          expect(response.body).not_to include('他人のひみつセリフ')
+        end
+      end
+    end
+  end
+
+  describe 'POST /favorites' do
+    let(:valid_params) { { serifu: 'またねって言って', genre: 'romance' } }
+
+    context '未ログイン時' do
+      it '401を返す' do
+        post '/favorites', params: valid_params
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'Favoriteを作成しない' do
+        expect {
+          post '/favorites', params: valid_params
+        }.not_to change(Favorite, :count)
+      end
+    end
+
+    context 'ログイン時' do
+      before { sign_in! }
+
+      it 'Favoriteを作成する' do
+        expect {
+          post '/favorites', params: valid_params
+        }.to change(Favorite, :count).by(1)
+      end
+
+      it 'ログイン中ユーザーに紐づく' do
+        post '/favorites', params: valid_params
+        expect(Favorite.last.user).to eq(User.find_by(firebase_uid: 'uid-1'))
+      end
+
+      it 'serifu/genreが保存される' do
+        post '/favorites', params: valid_params
+        f = Favorite.last
+        expect(f.serifu).to eq('またねって言って')
+        expect(f.genre).to eq('romance')
+      end
+
+      it '同じセリフの2回目は作成しない（重複防止）' do
+        post '/favorites', params: valid_params
+        expect {
+          post '/favorites', params: valid_params
+        }.not_to change(Favorite, :count)
+      end
+    end
+  end
+
+  describe 'DELETE /favorites/:id' do
+    let(:user) { User.find_by(firebase_uid: 'uid-1') }
+
+    context 'ログイン時' do
+      before { sign_in! }
+
+      it '自分のFavoriteを削除できる' do
+        fav = Favorite.create!(user: user, serifu: '消してね', genre: 'daily')
+        expect {
+          delete "/favorites/#{fav.id}"
+        }.to change(Favorite, :count).by(-1)
+      end
+
+      it '他ユーザーのFavoriteは削除できない' do
+        other = User.create!(firebase_uid: 'other', email: 'b@example.com')
+        fav = Favorite.create!(user: other, serifu: 'ひと様のお気に入り', genre: 'daily')
+        expect {
+          delete "/favorites/#{fav.id}"
+        }.not_to change(Favorite, :count)
+      end
+    end
+
+    context '未ログイン時' do
+      it '401を返す' do
+        user = User.create!(firebase_uid: 'uid-1', email: 'a@example.com')
+        fav = Favorite.create!(user: user, serifu: '消えないで', genre: 'daily')
+        delete "/favorites/#{fav.id}"
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end

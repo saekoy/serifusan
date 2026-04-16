@@ -1,5 +1,35 @@
 class FavoritesController < ApplicationController
+  before_action :require_login, only: %i[create destroy]
+
   def index
     @logged_in = logged_in?
+    @favorites = logged_in? ? current_user.favorites.order(created_at: :desc) : []
+  end
+
+  def create
+    fav = current_user.favorites.find_or_initialize_by(serifu: params[:serifu])
+    fav.genre = params[:genre] if fav.new_record?
+    fav.save
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: favorites_path }
+      format.json { head :created }
+    end
+  end
+
+  def destroy
+    fav = current_user.favorites.find_by(id: params[:id])
+    fav&.destroy
+
+    respond_to do |format|
+      format.html { redirect_to favorites_path }
+      format.json { head :ok }
+    end
+  end
+
+  private
+
+  def require_login
+    head :unauthorized unless logged_in?
   end
 end

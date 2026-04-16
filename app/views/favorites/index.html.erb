@@ -1,13 +1,46 @@
 <% content_for :title, 'お気に入り' %>
 
-<header class="px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
-  <h1 class="text-base font-bold">お気に入り</h1>
+<header class="flex items-center justify-between px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
+  <h1 class="text-base font-bold">🔖 お気に入り</h1>
+  <% if @logged_in && @favorites.any? %>
+    <span class="text-xs text-[#888888]"><%= @favorites.size %>件保存中</span>
+  <% end %>
 </header>
 
 <% if @logged_in %>
-  <div class="flex-1 px-4 py-6 text-sm text-[#888888]">
-    保存したセリフはまだありません。
-  </div>
+  <% if @favorites.any? %>
+    <div class="flex-1 overflow-y-auto px-4 py-4 pb-24">
+      <ul class="flex flex-col gap-3">
+        <% @favorites.each do |f| %>
+          <% genre = Genre.find(f.genre) %>
+          <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5 shadow-sm">
+            <div class="flex items-start gap-2">
+              <p class="text-sm leading-relaxed flex-1 text-[#1F1F1F]"><%= f.serifu %></p>
+              <%= button_to '🗑', favorite_path(f), method: :delete,
+                            form: { data: { turbo_confirm: 'このお気に入りを削除しますか？' } },
+                            class: 'text-xs px-2 py-1 border border-[#FDE8EF] rounded-lg text-[#F9A8D4] bg-white hover:opacity-90' %>
+            </div>
+            <% if genre %>
+              <div class="mt-2">
+                <span class="text-[11px] bg-[#F0EFEC] border border-[#DDDBD8] text-[#555555] px-2 py-0.5 rounded-lg">
+                  <%= genre[:emoji] %> <%= genre[:name] %>
+                </span>
+              </div>
+            <% end %>
+            <% if f.memo.present? %>
+              <div class="mt-2 text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5">
+                <%= f.memo %>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% else %>
+    <div class="flex-1 px-4 py-6 text-sm text-[#888888]">
+      まだお気に入りはありません。
+    </div>
+  <% end %>
 <% else %>
   <%= render 'shared/login_required',
              message: 'お気に入りに保存したセリフは、ログインするといつでも見返せます。' %>
