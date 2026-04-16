@@ -68,6 +68,46 @@ RSpec.describe 'Generations', type: :request do
       end
     end
 
+    context '入力長・ジャンルのガード' do
+      it 'themeが長すぎると拒否する' do
+        post '/generations', params: { genre: 'romance', theme: 'あ' * 201 }
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to be_present
+      end
+
+      it 'characterが長すぎると拒否する' do
+        post '/generations', params: { genre: 'romance', theme: 'OK', character: 'あ' * 301 }
+        expect(response).to redirect_to(root_path)
+      end
+
+      it '未知のgenreは拒否する' do
+        post '/generations', params: { genre: 'not-a-real-genre', theme: 'OK' }
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context 'ログイン時のレート制限' do
+      let(:verified_payload) do
+        { uid: 'uid-1', email: 'a@example.com', display_name: 'A', photo_url: nil, provider: 'google.com' }
+      end
+
+      before do
+        stub_const('GenerationsController::LOGGED_IN_DAILY_LIMIT', 2)
+        allow(FirebaseTokenVerifier).to receive(:verify).and_return(verified_payload)
+        post '/sessions', params: { id_token: 'valid' }
+      end
+
+      it '上限に達したら拒否する' do
+        post '/generations', params: valid_params
+        post '/generations', params: valid_params
+        expect {
+          post '/generations', params: valid_params
+        }.not_to change(Generation, :count)
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to be_present
+      end
+    end
+
     context 'GeminiServiceが空配列を返した場合（API失敗）' do
       before do
         allow_any_instance_of(GeminiService).to receive(:call).and_return([])
