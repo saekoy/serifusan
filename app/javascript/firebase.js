@@ -122,3 +122,11 @@ window.onGoogleLibraryLoad = setupGIS
 // Turbo ナビゲーション時にもボタンを再描画
 document.addEventListener("turbo:load", setupGIS)
 document.addEventListener("DOMContentLoaded", setupGIS)
+
+// CSP で onclick 属性が使えないため、data-signout 要素のクリックで signOut を実行する
+document.addEventListener("click", (e) => {
+  if (e.target.closest("[data-signout]")) {
+    e.preventDefault()
+    window.signOutCompletely()
+  }
+})

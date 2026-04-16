@@ -24,4 +24,9 @@ Rails.application.configure do
     # Google 認証ポップアップ/iframe 用
     policy.frame_src   :self, :https
   end
+
+  # importmap など Rails が生成する inline script は nonce で許可する
+  # （unsafe-inline を避け、毎リクエストでランダム生成したnonce一致時のみ実行可能にする）
+  config.content_security_policy_nonce_generator = ->(request) { SecureRandom.base64(16) }
+  config.content_security_policy_nonce_directives = %w(script-src)
 end
