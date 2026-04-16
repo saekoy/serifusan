@@ -12,7 +12,6 @@ gem 'rails', '~> 8.1.2'
 gem 'solid_cable'
 gem 'solid_cache'
 gem 'solid_queue'
-gem 'sqlite3', '>= 2.1'
 gem 'stimulus-rails'
 gem 'tailwindcss-rails'
 gem 'thruster', require: false
@@ -27,6 +26,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rspec-rails'
   gem 'rubocop-rails-omakase', require: false
+  gem 'sqlite3', '>= 2.1'
 end
 
 group :development do
@@ -41,4 +41,8 @@ end
 group :test do
   gem 'capybara'
   gem 'selenium-webdriver'
+end
+
+group :production do
+  gem 'pg'
 end
