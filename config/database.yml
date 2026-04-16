@@ -20,8 +20,10 @@ test:
   <<: *default
   database: storage/test.sqlite3
 
-# Store production database in the storage/ directory, which by default
-# is mounted as a persistent Docker volume in config/deploy.yml.
+# 本番は Render の PostgreSQL を DATABASE_URL から接続する。
+# default (sqlite3) を継承すると adapter 名が衝突するので独立させる。
 production:
-  <<: *default
+  adapter: postgresql
   url: <%= ENV['DATABASE_URL'] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  encoding: unicode

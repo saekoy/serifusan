@@ -1,29 +1,27 @@
-# Be sure to restart your server when you modify this file.
+# XSS 時の被害を抑える多層防御としての CSP。
+# Firebase Auth + Google Identity Services + gstatic（FirebaseJS SDK配信）を壊さない範囲で絞る。
 
-# Define an application-wide content security policy.
-# See the Securing Rails Applications Guide for more information:
-# https://guides.rubyonrails.org/security.html#content-security-policy-header
+Rails.application.configure do
+  config.content_security_policy do |policy|
+    policy.default_src :self
+    policy.base_uri    :self
+    policy.form_action :self
+    policy.object_src  :none
 
-# Rails.application.configure do
-#   config.content_security_policy do |policy|
-#     policy.default_src :self, :https
-#     policy.font_src    :self, :https, :data
-#     policy.img_src     :self, :https, :data
-#     policy.object_src  :none
-#     policy.script_src  :self, :https
-#     policy.style_src   :self, :https
-#     # Specify URI for violation reports
-#     # policy.report_uri "/csp-violation-report-endpoint"
-#   end
-#
-#   # Generate session nonces for permitted importmap, inline scripts, and inline styles.
-#   config.content_security_policy_nonce_generator = ->(request) { request.session.id.to_s }
-#   config.content_security_policy_nonce_directives = %w(script-src style-src)
-#
-#   # Automatically add `nonce` to `javascript_tag`, `javascript_include_tag`, and `stylesheet_link_tag`
-#   # if the corresponding directives are specified in `content_security_policy_nonce_directives`.
-#   # config.content_security_policy_nonce_auto = true
-#
-#   # Report violations without enforcing the policy.
-#   # config.content_security_policy_report_only = true
-# end
+    policy.font_src    :self, :https, :data
+    policy.img_src     :self, :https, :data
+    policy.media_src   :self, :https, :data
+
+    # スクリプトは HTTPS のみ。inline/eval は禁止
+    policy.script_src  :self, :https
+
+    # style は inline 属性（progress barの width 指定など）を許容
+    policy.style_src   :self, :https, :unsafe_inline
+
+    # Firebase / GIS の認証・トークンエンドポイント通信を許可（:https で十分）
+    policy.connect_src :self, :https
+
+    # Google 認証ポップアップ/iframe 用
+    policy.frame_src   :self, :https
+  end
+end
