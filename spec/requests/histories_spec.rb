@@ -77,6 +77,12 @@ RSpec.describe 'Histories', type: :request do
           get '/history'
           expect(response.body).not_to include('他人の秘密テーマ')
         end
+
+        it '?genre=romance でロマンスだけ表示する' do
+          get '/history', params: { genre: 'romance' }
+          expect(response.body).to     include('雨の日の告白')
+          expect(response.body).not_to include('ツンデレ特訓')
+        end
       end
     end
   end

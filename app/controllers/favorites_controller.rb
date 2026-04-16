@@ -3,7 +3,10 @@ class FavoritesController < ApplicationController
 
   def index
     @logged_in = logged_in?
-    @favorites = logged_in? ? current_user.favorites.order(created_at: :desc) : []
+    @genre_filter = params[:genre].presence
+    scope = logged_in? ? current_user.favorites.order(created_at: :desc) : Favorite.none
+    scope = scope.where(genre: @genre_filter) if @genre_filter
+    @favorites = scope
   end
 
   def create

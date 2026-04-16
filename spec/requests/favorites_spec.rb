@@ -74,6 +74,12 @@ RSpec.describe 'Favorites', type: :request do
           get '/favorites'
           expect(response.body).not_to include('他人のひみつセリフ')
         end
+
+        it '?genre=romance でロマンスだけ表示する' do
+          get '/favorites', params: { genre: 'romance' }
+          expect(response.body).to     include('ずっとそばにいてね')
+          expect(response.body).not_to include('別に心配じゃないし')
+        end
       end
     end
   end

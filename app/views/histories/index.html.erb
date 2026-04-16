@@ -8,6 +8,15 @@
 </header>
 
 <% if @logged_in %>
+  <div class="flex gap-1.5 overflow-x-auto px-4 pt-3 pb-1 flex-shrink-0">
+    <%= link_to 'すべて', histories_path,
+                class: "text-xs px-3 py-1 rounded-full border whitespace-nowrap #{@genre_filter.nil? ? 'bg-[#5B5BD6] text-white border-transparent' : 'bg-white text-[#B07BD4] border-[#EDD8FF]'}" %>
+    <% Genre.all.each do |g| %>
+      <%= link_to "#{g[:emoji]} #{g[:name]}", histories_path(genre: g[:slug]),
+                  class: "text-xs px-3 py-1 rounded-full border whitespace-nowrap #{@genre_filter == g[:slug] ? 'bg-[#5B5BD6] text-white border-transparent' : 'bg-white text-[#B07BD4] border-[#EDD8FF]'}" %>
+    <% end %>
+  </div>
+
   <% if @generations.any? %>
     <div class="flex-1 overflow-y-auto px-4 py-4 pb-24">
       <ul class="flex flex-col gap-3">
