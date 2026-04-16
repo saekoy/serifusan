@@ -18,4 +18,7 @@ Rails.application.routes.draw do
   get '/favorites', to: 'favorites#index', as: :favorites
   get '/history',   to: 'histories#index', as: :histories
   get '/about',     to: 'pages#about',     as: :about
+
+  post   '/sessions', to: 'sessions#create'
+  delete '/sessions', to: 'sessions#destroy'
 end
