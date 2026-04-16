@@ -113,5 +113,29 @@ RSpec.describe 'Generations', type: :request do
         expect(response).to redirect_to(root_path)
       end
     end
+
+    context 'ログイン中で一部が既にお気に入り登録済みの場合' do
+      let(:verified_payload) do
+        { uid: 'uid-1', email: 'a@example.com', display_name: 'A', photo_url: nil, provider: 'google.com' }
+      end
+
+      before do
+        allow(FirebaseTokenVerifier).to receive(:verify).and_return(verified_payload)
+        post '/sessions', params: { id_token: 'valid' }
+        post '/generations', params: { genre: 'romance', theme: '雨の日の告白' }
+        user = User.find_by(firebase_uid: 'uid-1')
+        Favorite.create!(user: user, serifu: 'セリフ1', genre: 'romance')
+      end
+
+      it '保存済みセリフは「保存済み」と表示される' do
+        get '/result'
+        expect(response.body).to include('保存済み')
+      end
+
+      it '未保存セリフは「保存」ボタンのまま' do
+        get '/result'
+        expect(response.body).to include('🔖 保存')
+      end
+    end
   end
 end

@@ -30,10 +30,14 @@
         </div>
         <div class="flex gap-1.5 justify-end">
           <% if @logged_in %>
-            <%= button_to '🔖 保存', '/favorites',
-                          params: { serifu: serifu, genre: @generation['genre'] },
-                          form_class: 'inline',
-                          class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6] cursor-pointer' %>
+            <% if @saved_serifus.include?(serifu) %>
+              <span class="text-xs px-3 py-1 border border-[#EDD8FF] rounded-lg text-[#B07BD4] bg-[#FBF5FF]">✓ 保存済み</span>
+            <% else %>
+              <%= button_to '🔖 保存', '/favorites',
+                            params: { serifu: serifu, genre: @generation['genre'] },
+                            form_class: 'inline',
+                            class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6] cursor-pointer' %>
+            <% end %>
           <% else %>
             <%= link_to '🔖 保存', '#',
                         class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6]' %>

@@ -46,5 +46,6 @@ class GenerationsController < ApplicationController
     @theme     = @generation['theme']
     @serifus   = @generation['serifus']
     @logged_in = logged_in?
+    @saved_serifus = logged_in? ? current_user.favorites.where(serifu: @serifus).pluck(:serifu).to_set : Set.new
   end
 end
