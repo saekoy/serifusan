@@ -6,6 +6,17 @@ class GenerationsController < ApplicationController
   TONE_MAX_LENGTH         = 20
   LOGGED_IN_DAILY_LIMIT   = ENV.fetch('LOGGED_IN_DAILY_LIMIT', 30).to_i
 
+  def show
+    @generation = session[:latest_generation]
+    return redirect_to(root_path) if @generation.blank?
+
+    @genre     = Genre.find(@generation['genre'])
+    @theme     = @generation['theme']
+    @serifus   = @generation['serifus']
+    @logged_in = logged_in?
+    @saved_serifus = logged_in? ? current_user.favorites.where(serifu: @serifus).pluck(:serifu).to_set : Set.new
+  end
+
   def create
     # 入力長ガード（長文プロンプトでの過課金防止）
     if params[:theme].to_s.length        > THEME_MAX_LENGTH ||
@@ -47,16 +58,16 @@ class GenerationsController < ApplicationController
     end
 
     session[:latest_generation] = {
-      'genre'      => params[:genre],
-      'theme'      => params[:theme],
-      'serifus'    => serifus,
+      'genre' => params[:genre],
+      'theme' => params[:theme],
+      'serifus' => serifus,
       'created_at' => Time.current.iso8601
     }
 
     if logged_in?
       current_user.generations.create!(
-        genre:   params[:genre],
-        theme:   params[:theme],
+        genre: params[:genre],
+        theme: params[:theme],
         serifus: serifus
       )
     else
@@ -64,16 +75,5 @@ class GenerationsController < ApplicationController
     end
 
     redirect_to result_path
-  end
-
-  def show
-    @generation = session[:latest_generation]
-    return redirect_to(root_path) if @generation.blank?
-
-    @genre     = Genre.find(@generation['genre'])
-    @theme     = @generation['theme']
-    @serifus   = @generation['serifus']
-    @logged_in = logged_in?
-    @saved_serifus = logged_in? ? current_user.favorites.where(serifu: @serifus).pluck(:serifu).to_set : Set.new
   end
 end

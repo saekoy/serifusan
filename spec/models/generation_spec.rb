@@ -32,15 +32,15 @@ RSpec.describe Generation, type: :model do
     end
 
     it '必須が揃っていれば有効' do
-      g = Generation.new(user: user, genre: 'romance', theme: 'テーマ', serifus: ['A', 'B'])
+      g = Generation.new(user: user, genre: 'romance', theme: 'テーマ', serifus: %w[A B])
       expect(g).to be_valid
     end
   end
 
   describe 'serifus (JSON配列保存)' do
     it '配列として保存・取得できる' do
-      g = Generation.create!(user: user, genre: 'romance', theme: 'テーマ', serifus: ['こんにちは', 'またね'])
-      expect(Generation.find(g.id).serifus).to eq(['こんにちは', 'またね'])
+      g = Generation.create!(user: user, genre: 'romance', theme: 'テーマ', serifus: %w[こんにちは またね])
+      expect(Generation.find(g.id).serifus).to eq(%w[こんにちは またね])
     end
   end
 

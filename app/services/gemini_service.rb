@@ -29,7 +29,7 @@ class GeminiService
       "【テーマ】#{@theme}"
     ]
     lines << "【一人称】#{@first_person}" if @first_person.present?
-    lines << "【口調】#{@tone}"           if @tone.present? && @tone != '指定なし'
+    lines << "【口調】#{@tone}" if @tone.present? && @tone != '指定なし'
     lines << "【キャラ設定】#{@character}" if @character.present?
     lines << ''
     lines << '出力：セリフのみのJSON配列。説明不要。各50文字以内の自然な日本語で。'

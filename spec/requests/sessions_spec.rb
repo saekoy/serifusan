@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.describe 'Sessions', type: :request do
   let(:verified_payload) do
     {
-      uid:          'firebase-uid-123',
-      email:        'test@example.com',
+      uid: 'firebase-uid-123',
+      email: 'test@example.com',
       display_name: 'テスト花子',
-      photo_url:    'https://example.com/avatar.jpg',
-      provider:     'google.com'
+      photo_url: 'https://example.com/avatar.jpg',
+      provider: 'google.com'
     }
   end
 
@@ -23,9 +23,9 @@ RSpec.describe 'Sessions', type: :request do
       end
 
       it 'Userを新規作成する' do
-        expect {
+        expect do
           post '/sessions', params: { id_token: 'valid-token' }
-        }.to change(User, :count).by(1)
+        end.to change(User, :count).by(1)
       end
 
       it '作成されたUserに Firebase の情報が入る' do
@@ -44,9 +44,9 @@ RSpec.describe 'Sessions', type: :request do
 
       it '既存ユーザーの場合は新規作成しない' do
         User.create!(firebase_uid: 'firebase-uid-123', email: 'old@example.com')
-        expect {
+        expect do
           post '/sessions', params: { id_token: 'valid-token' }
-        }.not_to change(User, :count)
+        end.not_to change(User, :count)
       end
 
       it '既存ユーザーの情報は最新に更新される' do
@@ -68,9 +68,9 @@ RSpec.describe 'Sessions', type: :request do
       end
 
       it 'Userを作成しない' do
-        expect {
+        expect do
           post '/sessions', params: { id_token: 'bad-token' }
-        }.not_to change(User, :count)
+        end.not_to change(User, :count)
       end
 
       it 'session[:user_id] に保存しない' do

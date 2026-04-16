@@ -94,9 +94,9 @@ RSpec.describe 'Favorites', type: :request do
       end
 
       it 'Favoriteを作成しない' do
-        expect {
+        expect do
           post '/favorites', params: valid_params
-        }.not_to change(Favorite, :count)
+        end.not_to change(Favorite, :count)
       end
     end
 
@@ -104,9 +104,9 @@ RSpec.describe 'Favorites', type: :request do
       before { sign_in! }
 
       it 'Favoriteを作成する' do
-        expect {
+        expect do
           post '/favorites', params: valid_params
-        }.to change(Favorite, :count).by(1)
+        end.to change(Favorite, :count).by(1)
       end
 
       it 'ログイン中ユーザーに紐づく' do
@@ -123,9 +123,9 @@ RSpec.describe 'Favorites', type: :request do
 
       it '同じセリフの2回目は作成しない（重複防止）' do
         post '/favorites', params: valid_params
-        expect {
+        expect do
           post '/favorites', params: valid_params
-        }.not_to change(Favorite, :count)
+        end.not_to change(Favorite, :count)
       end
     end
   end
@@ -168,17 +168,17 @@ RSpec.describe 'Favorites', type: :request do
 
       it '自分のFavoriteを削除できる' do
         fav = Favorite.create!(user: user, serifu: '消してね', genre: 'daily')
-        expect {
+        expect do
           delete "/favorites/#{fav.id}"
-        }.to change(Favorite, :count).by(-1)
+        end.to change(Favorite, :count).by(-1)
       end
 
       it '他ユーザーのFavoriteは削除できない' do
         other = User.create!(firebase_uid: 'other', email: 'b@example.com')
         fav = Favorite.create!(user: other, serifu: 'ひと様のお気に入り', genre: 'daily')
-        expect {
+        expect do
           delete "/favorites/#{fav.id}"
-        }.not_to change(Favorite, :count)
+        end.not_to change(Favorite, :count)
       end
     end
 

@@ -49,7 +49,7 @@ RSpec.describe 'Histories', type: :request do
 
         before do
           Generation.create!(user: user, genre: 'romance',  theme: '雨の日の告白', serifus: ['好きです'], created_at: 2.days.ago)
-          Generation.create!(user: user, genre: 'tsundere', theme: 'ツンデレ特訓', serifus: ['別に'],    created_at: 1.day.ago)
+          Generation.create!(user: user, genre: 'tsundere', theme: 'ツンデレ特訓', serifus: ['別に'], created_at: 1.day.ago)
         end
 
         it '各履歴のテーマを表示する' do

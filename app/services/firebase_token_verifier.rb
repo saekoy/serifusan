@@ -20,9 +20,7 @@ class FirebaseTokenVerifier
     # Firebase の公開鍵（複数）。Googleが指定する有効期限までメモリキャッシュする
     def public_keys
       @public_keys ||= {}
-      if @keys_expires_at.nil? || Time.current >= @keys_expires_at
-        fetch_public_keys!
-      end
+      fetch_public_keys! if @keys_expires_at.nil? || Time.current >= @keys_expires_at
       @public_keys
     end
 
@@ -54,11 +52,11 @@ class FirebaseTokenVerifier
     decoded = decode_and_verify_signature
     validate_claims(decoded)
     {
-      uid:          decoded['sub'],
-      email:        decoded['email'],
+      uid: decoded['sub'],
+      email: decoded['email'],
       display_name: decoded['name'],
-      photo_url:    decoded['picture'],
-      provider:     decoded.dig('firebase', 'sign_in_provider') || 'unknown'
+      photo_url: decoded['picture'],
+      provider: decoded.dig('firebase', 'sign_in_provider') || 'unknown'
     }
   end
 

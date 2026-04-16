@@ -15,7 +15,7 @@ class FavoritesController < ApplicationController
     fav.save
 
     respond_to do |format|
-      format.html { redirect_back fallback_location: favorites_path }
+      format.html { redirect_back_or_to(favorites_path) }
       format.json { head :created }
     end
   end

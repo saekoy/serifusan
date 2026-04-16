@@ -12,10 +12,10 @@ class SessionsController < ApplicationController
 
     user = User.find_or_initialize_by(firebase_uid: payload[:uid])
     user.assign_attributes(
-      email:        payload[:email],
+      email: payload[:email],
       display_name: payload[:display_name],
-      photo_url:    payload[:photo_url],
-      provider:     payload[:provider]
+      photo_url: payload[:photo_url],
+      provider: payload[:provider]
     )
     user.save!
 

@@ -44,9 +44,9 @@ RSpec.describe 'Generations', type: :request do
       end
 
       it 'Generationレコードを作成する' do
-        expect {
+        expect do
           post '/generations', params: valid_params
-        }.to change(Generation, :count).by(1)
+        end.to change(Generation, :count).by(1)
       end
 
       it 'ログイン中ユーザーに紐づく' do
@@ -100,9 +100,9 @@ RSpec.describe 'Generations', type: :request do
       it '上限に達したら拒否する' do
         post '/generations', params: valid_params
         post '/generations', params: valid_params
-        expect {
+        expect do
           post '/generations', params: valid_params
-        }.not_to change(Generation, :count)
+        end.not_to change(Generation, :count)
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to be_present
       end
