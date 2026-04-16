@@ -18,11 +18,6 @@ const GOOGLE_CLIENT_ID = "915693857966-t70f1qtdivb5btgek601m2fep51vjmqt.apps.goo
 const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 
-// 動作確認用（あとで消してOK）
-window.firebaseApp = app
-window.firebaseAuth = auth
-console.log("[firebase] initialized:", app.name)
-
 // 認証状態の変化を監視：ログイン成功時に Rails にIDトークンを送信
 // サーバー側が既にログイン状態ならPOSTしない（無限リロード防止）
 let railsSessionEstablished = document.querySelector('meta[name="logged-in"]')?.content === "true"
@@ -30,12 +25,10 @@ let railsSessionEstablished = document.querySelector('meta[name="logged-in"]')?.
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const idToken = await user.getIdToken()
-    console.log("[firebase] logged in:", user.displayName, user.email)
     if (!railsSessionEstablished) {
       await establishRailsSession(idToken)
     }
   } else {
-    console.log("[firebase] logged out")
     railsSessionEstablished = false
   }
 })
@@ -55,7 +48,6 @@ async function establishRailsSession(idToken) {
     })
     if (response.ok) {
       railsSessionEstablished = true
-      console.log("[rails] session established, reloading...")
       window.location.reload()
     } else {
       console.error("[rails] session failed:", response.status)
@@ -89,8 +81,7 @@ window.signOutCompletely = async () => {
 async function handleCredential(response) {
   try {
     const credential = GoogleAuthProvider.credential(response.credential)
-    const result = await signInWithCredential(auth, credential)
-    console.log("[firebase] signInWithCredential success:", result.user.email)
+    await signInWithCredential(auth, credential)
   } catch (error) {
     console.error("[firebase] signInWithCredential error:", error.code, error.message)
   }
@@ -108,7 +99,6 @@ function setupGIS() {
       callback: handleCredential,
     })
     gisInitialized = true
-    console.log("[GIS] initialized")
   }
   renderButtons()
 }
