@@ -36,10 +36,12 @@
                 </span>
               </div>
             <% end %>
-            <% if f.memo.present? %>
-              <div class="mt-2 text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5">
-                <%= f.memo %>
-              </div>
+            <%= form_with url: favorite_path(f), method: :patch, class: 'mt-2 flex gap-1.5' do |form| %>
+              <%= form.text_area :memo, value: f.memo, rows: 1,
+                                 placeholder: 'メモ（使った配信、アレンジなど）',
+                                 class: 'flex-1 text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5 resize-none focus:border-[#5B5BD6] focus:outline-none' %>
+              <%= form.submit '保存',
+                              class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-white hover:border-[#5B5BD6] cursor-pointer' %>
             <% end %>
           </li>
         <% end %>

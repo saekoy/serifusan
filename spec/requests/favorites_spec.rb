@@ -130,6 +130,36 @@ RSpec.describe 'Favorites', type: :request do
     end
   end
 
+  describe 'PATCH /favorites/:id' do
+    let(:user) { User.find_by(firebase_uid: 'uid-1') }
+
+    context 'ログイン時' do
+      before { sign_in! }
+
+      it '自分のFavoriteのmemoを更新できる' do
+        fav = Favorite.create!(user: user, serifu: 'メモ付けたい', genre: 'daily')
+        patch "/favorites/#{fav.id}", params: { memo: '4/15配信で使った' }
+        expect(fav.reload.memo).to eq('4/15配信で使った')
+      end
+
+      it '他ユーザーのFavoriteは更新できない' do
+        other = User.create!(firebase_uid: 'other', email: 'b@example.com')
+        fav = Favorite.create!(user: other, serifu: '他人のやつ', genre: 'daily', memo: '元のメモ')
+        patch "/favorites/#{fav.id}", params: { memo: 'いじっちゃだめ' }
+        expect(fav.reload.memo).to eq('元のメモ')
+      end
+    end
+
+    context '未ログイン時' do
+      it '401を返す' do
+        u = User.create!(firebase_uid: 'uid-1', email: 'a@example.com')
+        fav = Favorite.create!(user: u, serifu: 'だめ', genre: 'daily')
+        patch "/favorites/#{fav.id}", params: { memo: 'x' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
+
   describe 'DELETE /favorites/:id' do
     let(:user) { User.find_by(firebase_uid: 'uid-1') }
 

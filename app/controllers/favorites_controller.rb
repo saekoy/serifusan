@@ -1,5 +1,5 @@
 class FavoritesController < ApplicationController
-  before_action :require_login, only: %i[create destroy]
+  before_action :require_login, only: %i[create update destroy]
 
   def index
     @logged_in = logged_in?
@@ -17,6 +17,16 @@ class FavoritesController < ApplicationController
     respond_to do |format|
       format.html { redirect_back fallback_location: favorites_path }
       format.json { head :created }
+    end
+  end
+
+  def update
+    fav = current_user.favorites.find_by(id: params[:id])
+    fav&.update(memo: params[:memo].to_s)
+
+    respond_to do |format|
+      format.html { redirect_to favorites_path }
+      format.json { head :ok }
     end
   end
 
