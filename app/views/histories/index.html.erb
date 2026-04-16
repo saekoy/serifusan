@@ -1,13 +1,40 @@
 <% content_for :title, '履歴' %>
 
-<header class="px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
-  <h1 class="text-base font-bold">履歴</h1>
+<header class="flex items-center justify-between px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
+  <h1 class="text-base font-bold">🕐 生成履歴</h1>
+  <% if @logged_in && @generations.any? %>
+    <span class="text-xs text-[#888888]"><%= @generations.size %>件</span>
+  <% end %>
 </header>
 
 <% if @logged_in %>
-  <div class="flex-1 px-4 py-6 text-sm text-[#888888]">
-    まだ生成履歴はありません。
-  </div>
+  <% if @generations.any? %>
+    <div class="flex-1 overflow-y-auto px-4 py-4 pb-24">
+      <ul class="flex flex-col gap-3">
+        <% @generations.each do |g| %>
+          <% genre = Genre.find(g.genre) %>
+          <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <% if genre %>
+                <span class="text-[11px] bg-[#F0EFEC] border border-[#DDDBD8] text-[#555555] px-2 py-0.5 rounded-lg">
+                  <%= genre[:emoji] %> <%= genre[:name] %>
+                </span>
+              <% else %>
+                <span class="text-[11px] text-[#888888]"><%= g.genre %></span>
+              <% end %>
+              <span class="text-[11px] text-[#888888]"><%= l(g.created_at.to_date, format: :short) rescue g.created_at.strftime('%-m/%-d') %></span>
+            </div>
+            <div class="text-[13px] text-[#555555] mb-1.5">テーマ：<%= g.theme %></div>
+            <div class="text-xs text-[#888888]"><%= g.serifus.size %>件のセリフ</div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% else %>
+    <div class="flex-1 px-4 py-6 text-sm text-[#888888]">
+      まだ生成履歴はありません。
+    </div>
+  <% end %>
 <% else %>
   <%= render 'shared/login_required',
              message: '過去に生成したセリフは、ログインすると履歴から見返せます。' %>

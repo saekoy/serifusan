@@ -25,7 +25,15 @@ class GenerationsController < ApplicationController
       'created_at' => Time.current.iso8601
     }
 
-    increment_generation_count unless logged_in?
+    if logged_in?
+      current_user.generations.create!(
+        genre:   params[:genre],
+        theme:   params[:theme],
+        serifus: serifus
+      )
+    else
+      increment_generation_count
+    end
 
     redirect_to result_path
   end

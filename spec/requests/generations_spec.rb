@@ -33,6 +33,41 @@ RSpec.describe 'Generations', type: :request do
       expect(session[:gen_count]).to eq(2)
     end
 
+    context 'ログイン時' do
+      let(:verified_payload) do
+        { uid: 'uid-1', email: 'a@example.com', display_name: 'A', photo_url: nil, provider: 'google.com' }
+      end
+
+      before do
+        allow(FirebaseTokenVerifier).to receive(:verify).and_return(verified_payload)
+        post '/sessions', params: { id_token: 'valid' }
+      end
+
+      it 'Generationレコードを作成する' do
+        expect {
+          post '/generations', params: valid_params
+        }.to change(Generation, :count).by(1)
+      end
+
+      it 'ログイン中ユーザーに紐づく' do
+        post '/generations', params: valid_params
+        expect(Generation.last.user).to eq(User.last)
+      end
+
+      it 'genre/theme/serifusが保存される' do
+        post '/generations', params: valid_params
+        g = Generation.last
+        expect(g.genre).to   eq('romance')
+        expect(g.theme).to   eq('雨の日の告白')
+        expect(g.serifus).to eq(serifus)
+      end
+
+      it '未ログイン用の生成回数カウンタは増やさない' do
+        post '/generations', params: valid_params
+        expect(session[:gen_count].to_i).to eq(0)
+      end
+    end
+
     context 'GeminiServiceが空配列を返した場合（API失敗）' do
       before do
         allow_any_instance_of(GeminiService).to receive(:call).and_return([])
