@@ -23,14 +23,14 @@ class ApplicationController < ActionController::Base
   end
 
   def generation_count_today
-    return 0 if session[:gen_count_date] != Date.today.to_s
+    return 0 if session[:gen_count_date] != Time.zone.today.to_s
 
     session[:gen_count].to_i
   end
 
   def increment_generation_count
-    if session[:gen_count_date] != Date.today.to_s
-      session[:gen_count_date] = Date.today.to_s
+    if session[:gen_count_date] != Time.zone.today.to_s
+      session[:gen_count_date] = Time.zone.today.to_s
       session[:gen_count] = 0
     end
     session[:gen_count] = session[:gen_count].to_i + 1

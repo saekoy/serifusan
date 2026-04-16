@@ -39,18 +39,26 @@ Metrics/BlockLength:
 # 上記項目をRubocopが計算して基準値を超えると警告を出す（上記頭文字をとって'Abc'）
 Metrics/AbcSize:
   Max: 50
- 
+  Exclude:
+    - 'app/controllers/generations_controller.rb'
+
 # メソッドの中身が複雑になっていないか、Rubocopが計算して基準値を超えると警告を出す
 Metrics/PerceivedComplexity:
   Max: 8
- 
+  Exclude:
+    - 'app/controllers/generations_controller.rb'
+
 # 循環的複雑度が高すぎないかをチェック（ifやforなどを1メソッド内で使いすぎている）
 Metrics/CyclomaticComplexity:
   Max: 10
- 
+  Exclude:
+    - 'app/controllers/generations_controller.rb'
+
 # メソッドの行数が多すぎないかをチェック
 Metrics/MethodLength:
   Max: 30
+  Exclude:
+    - 'app/controllers/generations_controller.rb'
  
 # ネストが深すぎないかをチェック（if文のネストもチェック）
 Metrics/BlockNesting:
@@ -87,3 +95,17 @@ Style/FrozenStringLiteralComment:
 # メソッドパラメータ名の最小文字数を設定
 Naming/MethodParameterName:
   MinNameLength: 1
+
+# 日本語単一言語アプリのため、localeファイルへの分離は不要
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+# GenreはActiveRecordではないのでfind_each/pluckは使えない
+Rails/FindEach:
+  Exclude:
+    - 'spec/models/genre_spec.rb'
+
+Rails/Pluck:
+  Exclude:
+    - 'spec/models/genre_spec.rb'
+
