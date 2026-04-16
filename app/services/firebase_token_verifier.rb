@@ -9,7 +9,7 @@ class FirebaseTokenVerifier
   class VerificationError < StandardError; end
 
   PROJECT_ID = ENV.fetch('FIREBASE_PROJECT_ID', 'serifusan-237f2')
-  PUBLIC_KEYS_URL = 'https://www.googleapis.com/robotics/v1/metadata/x509/securetoken@system.gserviceaccount.com'.freeze
+  PUBLIC_KEYS_URL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com'.freeze
   ISSUER = "https://securetoken.google.com/#{PROJECT_ID}".freeze
 
   class << self

@@ -8,10 +8,18 @@ class ApplicationController < ActionController::Base
   # 未ログイン時の1日あたり生成上限（.env で上書き可能。本番3、開発は100推奨）
   DAILY_GENERATION_LIMIT = ENV.fetch('DAILY_GENERATION_LIMIT', 3).to_i
 
+  helper_method :current_user, :logged_in?
+
   private
 
+  def current_user
+    return @current_user if defined?(@current_user)
+
+    @current_user = session[:user_id] && User.find_by(id: session[:user_id])
+  end
+
   def logged_in?
-    false # TODO: Firebase Auth導入後に差し替え
+    current_user.present?
   end
 
   def generation_count_today

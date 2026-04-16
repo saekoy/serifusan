@@ -12,12 +12,13 @@
       <div class="flex items-center gap-3 bg-white border-[1.5px] border-[#EDD8FF] rounded-2xl px-4 py-3 mb-2.5 shadow-[0_2px_8px_rgba(168,85,247,0.06)]">
         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#A855F7] to-[#EC4899] flex items-center justify-center text-xl">🐱</div>
         <div class="flex-1">
-          <div class="text-sm font-bold text-[#3B1464]">ユーザー名</div>
+          <div class="text-sm font-bold text-[#3B1464]"><%= current_user.display_name.presence || current_user.email %></div>
           <div class="text-xs text-[#B07BD4]">Google でログイン中</div>
         </div>
       </div>
       <button type="button"
-              class="w-full border border-[#F9A8D4] text-[#EC4899] text-sm font-bold rounded-full py-2.5 bg-white">
+              onclick="window.signOutCompletely()"
+              class="w-full border border-[#F9A8D4] text-[#EC4899] text-sm font-bold rounded-full py-2.5 bg-white cursor-pointer hover:opacity-90">
         ログアウト
       </button>
     <% else %>

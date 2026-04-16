@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged } from "firebase/auth"
+import { getAuth, GoogleAuthProvider, signInWithCredential, onAuthStateChanged, signOut } from "firebase/auth"
 
 // Firebase コンソールで取得した設定値（apiKey は公開前提の識別子のため直書きOK）
 const firebaseConfig = {
@@ -23,16 +23,67 @@ window.firebaseApp = app
 window.firebaseAuth = auth
 console.log("[firebase] initialized:", app.name)
 
-// 認証状態の変化を監視
+// 認証状態の変化を監視：ログイン成功時に Rails にIDトークンを送信
+// サーバー側が既にログイン状態ならPOSTしない（無限リロード防止）
+let railsSessionEstablished = document.querySelector('meta[name="logged-in"]')?.content === "true"
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const idToken = await user.getIdToken()
     console.log("[firebase] logged in:", user.displayName, user.email)
-    console.log("[firebase] ID Token:", idToken)
+    if (!railsSessionEstablished) {
+      await establishRailsSession(idToken)
+    }
   } else {
     console.log("[firebase] logged out")
+    railsSessionEstablished = false
   }
 })
+
+// IDトークンを Rails にPOSTしてセッション確立
+async function establishRailsSession(idToken) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+  try {
+    const response = await fetch("/sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken || "",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({ id_token: idToken })
+    })
+    if (response.ok) {
+      railsSessionEstablished = true
+      console.log("[rails] session established, reloading...")
+      window.location.reload()
+    } else {
+      console.error("[rails] session failed:", response.status)
+    }
+  } catch (error) {
+    console.error("[rails] session fetch error:", error)
+  }
+}
+
+// ===== ログアウト：Firebase と Rails の両方からログアウト =====
+// Firebase だけログアウトすると Rails セッションが残る
+// Rails だけログアウトすると onAuthStateChanged が再発火してまた /sessions POST → 無限ループ
+window.signOutCompletely = async () => {
+  try {
+    await signOut(auth)
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+    await fetch("/sessions", {
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": csrfToken || "",
+        "Accept": "application/json"
+      }
+    })
+    window.location.href = "/"
+  } catch (error) {
+    console.error("[logout] error:", error)
+  }
+}
 
 // ===== GIS から受け取った credential を Firebase に渡す =====
 async function handleCredential(response) {

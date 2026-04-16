@@ -6,7 +6,13 @@
     <h1 class="text-[22px] font-bold">✦ セリフさん</h1>
     <p class="text-xs text-[#888888] mt-0.5">セリフ枠のセリフをAIが考えてくれる</p>
   </div>
-  <% unless @logged_in %>
+  <% if @logged_in %>
+    <%= link_to about_path,
+          class: 'w-[34px] h-[34px] rounded-full bg-[#5B5BD6] flex items-center justify-center text-lg flex-shrink-0 cursor-pointer',
+          'aria-label': 'アカウント' do %>
+      🐱
+    <% end %>
+  <% else %>
     <div data-gis-button class="flex justify-end">
       <span class="text-xs text-[#5B5BD6] font-bold">ログイン</span>
     </div>
