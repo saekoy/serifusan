@@ -7,15 +7,18 @@
     <p class="text-xs text-[#888888] mt-0.5">セリフ枠のセリフをAIが考えてくれる</p>
   </div>
   <% if @logged_in %>
-    <%= link_to about_path,
-          class: 'w-[34px] h-[34px] rounded-full bg-[#5B5BD6] flex items-center justify-center text-lg flex-shrink-0 cursor-pointer',
-          'aria-label': 'アカウント' do %>
-      🐱
+    <%= link_to about_path, class: 'flex-shrink-0', 'aria-label': 'アカウント' do %>
+      <% if current_user.photo_url.present? %>
+        <img src="<%= current_user.photo_url %>" alt="" class="w-[34px] h-[34px] rounded-full object-cover">
+      <% else %>
+        <div class="w-[34px] h-[34px] rounded-full bg-[#5B5BD6] flex items-center justify-center text-sm text-white font-bold">
+          <%= current_user.display_name&.first || '?' %>
+        </div>
+      <% end %>
     <% end %>
   <% else %>
-    <div data-gis-button class="flex justify-end">
-      <span class="text-xs text-[#5B5BD6] font-bold">ログイン</span>
-    </div>
+    <%= link_to 'ログイン →', about_path,
+          class: 'text-xs text-[#5B5BD6] font-bold flex-shrink-0' %>
   <% end %>
 </header>
 

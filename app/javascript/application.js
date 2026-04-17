@@ -21,3 +21,15 @@ document.addEventListener('turbo:load', () => {
   const overlay = document.getElementById('loading-overlay')
   if (overlay) overlay.classList.add('hidden')
 })
+
+// セリフのコピーボタン
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-serifu]')
+  if (!btn) return
+
+  navigator.clipboard.writeText(btn.dataset.serifu).then(() => {
+    const original = btn.textContent
+    btn.textContent = '✓ コピー済み'
+    setTimeout(() => { btn.textContent = original }, 1500)
+  })
+})

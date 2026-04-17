@@ -12,7 +12,8 @@
     <%= link_to 'すべて', favorites_path,
                 class: "text-xs px-3 py-1 rounded-full border whitespace-nowrap #{@genre_filter.nil? ? 'bg-[#5B5BD6] text-white border-transparent' : 'bg-white text-[#B07BD4] border-[#EDD8FF]'}" %>
     <% Genre.all.each do |g| %>
-      <%= link_to "#{g[:emoji]} #{g[:name]}", favorites_path(genre: g[:slug]),
+      <%= link_to g[:emoji], favorites_path(genre: g[:slug]),
+                  title: g[:name],
                   class: "text-xs px-3 py-1 rounded-full border whitespace-nowrap #{@genre_filter == g[:slug] ? 'bg-[#5B5BD6] text-white border-transparent' : 'bg-white text-[#B07BD4] border-[#EDD8FF]'}" %>
     <% end %>
   </div>
@@ -29,20 +30,26 @@
                             form: { data: { turbo_confirm: 'このお気に入りを削除しますか？' } },
                             class: 'text-xs px-2 py-1 border border-[#FDE8EF] rounded-lg text-[#F9A8D4] bg-white hover:opacity-90' %>
             </div>
-            <% if genre %>
-              <div class="mt-2">
-                <span class="text-[11px] bg-[#F0EFEC] border border-[#DDDBD8] text-[#555555] px-2 py-0.5 rounded-lg">
-                  <%= genre[:emoji] %> <%= genre[:name] %>
-                </span>
-              </div>
-            <% end %>
-            <%= form_with url: favorite_path(f), method: :patch, class: 'mt-2 flex gap-1.5' do |form| %>
-              <%= form.text_area :memo, value: f.memo, rows: 1,
-                                 placeholder: 'メモ（使った配信、アレンジなど）',
-                                 class: 'flex-1 text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5 resize-none focus:border-[#5B5BD6] focus:outline-none' %>
-              <%= form.submit '保存',
-                              class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-white hover:border-[#5B5BD6] cursor-pointer' %>
-            <% end %>
+            <div class="flex items-center gap-2 mt-2">
+              <% if genre %>
+                <span class="text-[11px]"><%= genre[:emoji] %></span>
+              <% end %>
+              <% if f.memo.present? %>
+                <span class="text-[11px] text-[#888888] truncate flex-1">📝 <%= f.memo %></span>
+              <% end %>
+            </div>
+            <details class="mt-1.5 group">
+              <summary class="text-[11px] text-[#5B5BD6] cursor-pointer list-none hover:opacity-80">
+                <%= f.memo.present? ? 'メモを編集' : 'メモを追加' %>
+              </summary>
+              <%= form_with url: favorite_path(f), method: :patch, class: 'mt-1.5 flex gap-1.5' do |form| %>
+                <%= form.text_area :memo, value: f.memo, rows: 1,
+                                   placeholder: 'メモ（使った配信、アレンジなど）',
+                                   class: 'flex-1 text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5 resize-none focus:border-[#5B5BD6] focus:outline-none' %>
+                <%= form.submit '保存',
+                                class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-white hover:border-[#5B5BD6] cursor-pointer' %>
+              <% end %>
+            </details>
           </li>
         <% end %>
       </ul>

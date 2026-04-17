@@ -12,5 +12,6 @@ ja:
         blank: "を入力してください"
         too_long: "は%{count}文字以内で入力してください"
         invalid: "が正しくありません"
+        record_invalid: "バリデーションに失敗しました: %{errors}"
   errors:
     format: "%{attribute}%{message}"

@@ -10,7 +10,13 @@
     <h2 class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase mb-2">👤 アカウント</h2>
     <% if @logged_in %>
       <div class="flex items-center gap-3 bg-white border-[1.5px] border-[#EDD8FF] rounded-2xl px-4 py-3 mb-2.5 shadow-[0_2px_8px_rgba(168,85,247,0.06)]">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#A855F7] to-[#EC4899] flex items-center justify-center text-xl">🐱</div>
+        <% if current_user.photo_url.present? %>
+          <img src="<%= current_user.photo_url %>" alt="" class="w-10 h-10 rounded-full object-cover">
+        <% else %>
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#A855F7] to-[#EC4899] flex items-center justify-center text-sm text-white font-bold">
+            <%= current_user.display_name&.first || '?' %>
+          </div>
+        <% end %>
         <div class="flex-1">
           <div class="text-sm font-bold text-[#3B1464]"><%= current_user.display_name.presence || current_user.email %></div>
           <div class="text-xs text-[#B07BD4]">Google でログイン中</div>

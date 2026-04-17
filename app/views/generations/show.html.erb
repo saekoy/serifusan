@@ -38,9 +38,6 @@
                             form_class: 'inline',
                             class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6] cursor-pointer' %>
             <% end %>
-          <% else %>
-            <%= link_to '🔖 保存', '#',
-                        class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6]' %>
           <% end %>
           <button type="button"
                   class="text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6]"
@@ -51,11 +48,13 @@
   </ul>
 </div>
 
-<%# ===== フッター ===== %>
-<footer class="flex gap-2 p-3 border-t border-[#E0DDD9] bg-[#FAFAF8] flex-shrink-0">
+<%# ===== アクションボタン ===== %>
+<div class="flex gap-2 p-3 bg-[#FAFAF8] flex-shrink-0">
   <%= link_to '↩ もう一回', root_path,
               class: 'flex-1 py-3 text-center bg-[#FAFAF8] border border-[#E0DDD9] text-[#555555] text-sm font-semibold rounded-lg hover:opacity-90' %>
   <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape("セリフさんで生成したセリフ\n#セリフさん") %>"
      target="_blank" rel="noopener"
      class="flex-1 py-3 text-center bg-black text-white text-sm font-bold rounded-lg hover:opacity-85">𝕏 シェア</a>
-</footer>
+</div>
+
+<%= render 'shared/bottom_nav', active: :home %>
