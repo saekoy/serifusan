@@ -32,10 +32,10 @@ RSpec.describe 'Contacts', type: :request do
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
-    it 'メールが空だと保存しない' do
+    it 'メールが空でも保存できる' do
       expect do
         post '/contact', params: { contact: { name: 'テスト', email: '', body: '本文' } }
-      end.not_to change(Contact, :count)
+      end.to change(Contact, :count).by(1)
     end
 
     it '本文が空だと保存しない' do

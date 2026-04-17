@@ -1,0 +1,16 @@
+ja:
+  activerecord:
+    models:
+      contact: お問い合わせ
+    attributes:
+      contact:
+        name: お名前
+        email: メールアドレス
+        body: お問い合わせ内容
+    errors:
+      messages:
+        blank: "を入力してください"
+        too_long: "は%{count}文字以内で入力してください"
+        invalid: "が正しくありません"
+  errors:
+    format: "%{attribute}%{message}"

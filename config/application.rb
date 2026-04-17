@@ -8,6 +8,7 @@ module Serifusan
   class Application < Rails::Application
     config.load_defaults 8.1
     config.autoload_lib(ignore: %w[assets tasks])
+    config.i18n.default_locale = :ja
 
     config.generators do |g|
       g.assets false          # CSS, JavaScriptファイルを自動生成しない
