@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   delete '/favorites/:id', to: 'favorites#destroy', as: :favorite
   get    '/history',       to: 'histories#index',   as: :histories
   get    '/about',         to: 'pages#about',       as: :about
+  get    '/contact',       to: 'contacts#new',      as: :contact
+  post   '/contact',       to: 'contacts#create'
 
   post   '/sessions', to: 'sessions#create'
   delete '/sessions', to: 'sessions#destroy'

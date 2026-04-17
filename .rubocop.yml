@@ -60,7 +60,7 @@ Metrics/MethodLength:
   Exclude:
     - 'app/controllers/generations_controller.rb'
  
-# ネストが深すぎないかをチェック（if文のネストもチェック）
+# ネストが深すぎないかをチェック（if文のbin/rails db:migrate && bundle exec rspec && bundle exec rubocopネストもチェック）
 Metrics/BlockNesting:
   Max: 5
  
