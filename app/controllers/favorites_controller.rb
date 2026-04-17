@@ -10,23 +10,35 @@ class FavoritesController < ApplicationController
   end
 
   def create
-    fav = current_user.favorites.find_or_initialize_by(serifu: params[:serifu])
-    fav.genre = params[:genre] if fav.new_record?
-    fav.save
+    fav = current_user.favorites.find_or_initialize_by(serifu: params[:serifu].to_s)
+    fav.genre = params[:genre].to_s if fav.new_record?
+    saved = fav.save
 
     respond_to do |format|
-      format.html { redirect_back_or_to(favorites_path) }
-      format.json { head :created }
+      format.html do
+        if saved
+          redirect_back_or_to(favorites_path)
+        else
+          redirect_back_or_to(favorites_path, alert: '保存できませんでした。')
+        end
+      end
+      format.json { head(saved ? :created : :unprocessable_content) }
     end
   end
 
   def update
     fav = current_user.favorites.find_by(id: params[:id])
-    fav&.update(memo: params[:memo].to_s)
+    saved = fav&.update(memo: params[:memo].to_s)
 
     respond_to do |format|
-      format.html { redirect_to favorites_path }
-      format.json { head :ok }
+      format.html do
+        if saved
+          redirect_to favorites_path
+        else
+          redirect_to favorites_path, alert: 'メモを保存できませんでした。'
+        end
+      end
+      format.json { head(saved ? :ok : :unprocessable_content) }
     end
   end
 

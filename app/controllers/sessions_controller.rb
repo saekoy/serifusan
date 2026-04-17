@@ -19,7 +19,13 @@ class SessionsController < ApplicationController
     )
     user.save!
 
+    # セッション固定攻撃対策: ログイン時に必ずセッションIDを振り直す。
+    # 直近の生成結果だけは退避→復元して、ログイン直後に /result が飛ばされないようにする。
+    preserved_generation = session[:latest_generation]
+    reset_session
     session[:user_id] = user.id
+    session[:latest_generation] = preserved_generation if preserved_generation
+
     head :ok
   rescue FirebaseTokenVerifier::VerificationError => e
     Rails.logger.warn("Firebase token verification failed: #{e.message}")
