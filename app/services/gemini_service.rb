@@ -32,7 +32,7 @@ class GeminiService
     lines << "【口調】#{@tone}" if @tone.present? && @tone != '指定なし'
     lines << "【キャラ設定】#{@character}" if @character.present?
     lines << ''
-    lines << '出力：セリフのみのJSON配列。説明不要。各40〜50文字程度の自然な日本語で。'
+    lines << '出力：セリフのみのJSON配列。説明不要。各100〜140文字程度の自然な日本語で、Vライバーが配信中に話すセリフとして自然な長さにしてください。'
     lines << '例：["セリフ1","セリフ2"]'
     lines.join("\n")
   end

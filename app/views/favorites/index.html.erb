@@ -23,7 +23,7 @@
       <ul class="flex flex-col gap-3">
         <% @favorites.each do |f| %>
           <% genre = Genre.find(f.genre) %>
-          <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5 shadow-sm">
+          <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5">
             <div class="flex items-start gap-2">
               <p class="text-sm leading-relaxed flex-1 text-[#1F1F1F]">
                 <% if genre %>

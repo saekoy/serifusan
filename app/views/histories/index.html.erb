@@ -23,13 +23,14 @@
       <ul class="flex flex-col gap-3">
         <% @generations.each do |g| %>
           <% genre = Genre.find(g.genre) %>
-          <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5 shadow-sm">
-            <div class="flex items-center justify-end mb-2">
-              <span class="text-[11px] text-[#888888]"><%= g.created_at.strftime('%Y/%-m/%-d') %></span>
+          <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5">
+            <div class="flex items-center gap-2 mb-2">
+              <% if genre %>
+                <span class="text-[14px] flex-shrink-0" aria-hidden="true"><%= genre[:emoji] %></span>
+              <% end %>
+              <span class="text-[12px] text-[#555555] truncate flex-1">テーマ：<%= g.theme %></span>
+              <span class="text-[11px] text-[#888888] flex-shrink-0"><%= g.created_at.strftime('%Y/%-m/%-d %H:%M') %></span>
             </div>
-            <% if g.theme.present? %>
-              <div class="text-[13px] text-[#555555] mb-1.5">テーマ：<%= g.theme %></div>
-            <% end %>
             <details class="group">
               <summary class="text-xs text-[#5B5BD6] cursor-pointer list-none hover:opacity-80">
                 <%= g.serifus.size %>件のセリフを見る <span class="group-open:hidden">▸</span><span class="hidden group-open:inline">▾</span>

@@ -3,24 +3,31 @@
 import "firebase"
 
 // 生成フォーム送信時にローディングオーバーレイを表示
-document.addEventListener('turbo:submit-start', (event) => {
-  const form = event.target
-  if (!form.action.endsWith('/generations')) return
-
+const showLoadingOverlay = () => {
   const overlay = document.getElementById('loading-overlay')
   if (overlay) overlay.classList.remove('hidden')
-})
-
-// 送信終了・キャッシュ復元時に非表示へ戻す
-document.addEventListener('turbo:submit-end', () => {
+}
+const hideLoadingOverlay = () => {
   const overlay = document.getElementById('loading-overlay')
   if (overlay) overlay.classList.add('hidden')
+}
+
+const isGenerationForm = (form) => form && form.action && form.action.endsWith('/generations')
+
+// Turbo経由（remote form）
+document.addEventListener('turbo:submit-start', (event) => {
+  if (isGenerationForm(event.target)) showLoadingOverlay()
+})
+document.addEventListener('turbo:submit-end', hideLoadingOverlay)
+document.addEventListener('turbo:load', hideLoadingOverlay)
+
+// 通常のsubmit（local: true や非Turboフォーム）
+document.addEventListener('submit', (event) => {
+  if (isGenerationForm(event.target)) showLoadingOverlay()
 })
 
-document.addEventListener('turbo:load', () => {
-  const overlay = document.getElementById('loading-overlay')
-  if (overlay) overlay.classList.add('hidden')
-})
+// ページ遷移完了時・bfcache復元時に非表示
+window.addEventListener('pageshow', hideLoadingOverlay)
 
 // セリフのコピーボタン
 document.addEventListener('click', (e) => {
