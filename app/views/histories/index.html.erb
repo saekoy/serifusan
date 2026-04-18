@@ -23,29 +23,21 @@
       <ul class="flex flex-col gap-3">
         <% @generations.each do |g| %>
           <% genre = Genre.find(g.genre) %>
-          <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5">
-            <div class="flex items-center gap-2 mb-2">
-              <% if genre %>
-                <span class="text-[14px] flex-shrink-0" aria-hidden="true"><%= genre[:emoji] %></span>
-              <% end %>
-              <span class="text-[12px] text-[#555555] truncate flex-1">テーマ：<%= g.theme %></span>
-              <span class="text-[11px] text-[#888888] flex-shrink-0"><%= g.created_at.strftime('%Y/%-m/%-d %H:%M') %></span>
-            </div>
-            <details class="group">
-              <summary class="text-xs text-[#5B5BD6] cursor-pointer list-none hover:opacity-80">
-                <%= g.serifus.size %>件のセリフを見る <span class="group-open:hidden">▸</span><span class="hidden group-open:inline">▾</span>
-              </summary>
-              <ul class="mt-2 flex flex-col gap-1">
-                <% g.serifus.each do |s| %>
-                  <li class="text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5">
-                    <% if genre %>
-                      <span class="mr-1 align-middle" aria-hidden="true"><%= genre[:emoji] %></span>
-                    <% end %>
-                    <%= s %>
-                  </li>
+          <li>
+            <%= link_to result_path(id: g.id),
+                        class: 'block bg-white border border-[#E0DDD9] rounded-xl p-3.5 hover:border-[#5B5BD6] transition' do %>
+              <div class="flex items-center gap-2 mb-1.5">
+                <% if genre %>
+                  <span class="text-[14px] flex-shrink-0" aria-hidden="true"><%= genre[:emoji] %></span>
                 <% end %>
-              </ul>
-            </details>
+                <span class="text-[12px] text-[#555555] truncate flex-1">テーマ：<%= g.theme %></span>
+                <span class="text-[11px] text-[#888888] flex-shrink-0"><%= g.created_at.strftime('%Y/%-m/%-d %H:%M') %></span>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-[#888888]">
+                <span><%= g.serifus.size %>件のセリフ</span>
+                <span class="text-[#5B5BD6]">結果を開く →</span>
+              </div>
+            <% end %>
           </li>
         <% end %>
       </ul>

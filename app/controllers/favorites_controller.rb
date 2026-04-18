@@ -19,7 +19,7 @@ class FavoritesController < ApplicationController
         if saved
           redirect_back_or_to(favorites_path)
         else
-          redirect_back_or_to(favorites_path, alert: '保存できませんでした。')
+          redirect_back_or_to(favorites_path, alert: 'いいねできませんでした。')
         end
       end
       format.json { head(saved ? :created : :unprocessable_content) }

@@ -13,7 +13,7 @@
 <%# ===== 未ログイン時: ログイン誘導バナー ===== %>
 <% unless @logged_in %>
   <div class="bg-[#F0EFEC] border-b border-[#E0DDD9] px-4 py-2 text-xs text-[#555555] flex items-center gap-1.5 flex-shrink-0">
-    🔒 お気に入り保存はログインが必要です
+    🔒 いいねにはログインが必要です
   </div>
 <% end %>
 
@@ -22,34 +22,34 @@
   <ul class="flex flex-col gap-1.5">
     <% @serifus.each_with_index do |serifu, i| %>
       <li class="bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg p-3 flex flex-col gap-2">
-        <div class="flex items-start gap-2">
-          <span class="w-5 h-5 rounded-full bg-[#DDDBD8] text-[#555555] text-[11px] font-semibold flex items-center justify-center flex-shrink-0 mt-0.5">
-            <%= i + 1 %>
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[11px] font-semibold text-[#888888] tracking-wider">
+            <%= format('%02d', i + 1) %>
           </span>
-          <p class="text-sm leading-relaxed flex-1"><%= serifu %></p>
-        </div>
-        <div class="flex gap-1.5 justify-end">
-          <% if @logged_in %>
-            <% if @saved_serifus.include?(serifu) %>
-              <span class="text-xs px-3 py-1 border border-[#EDD8FF] rounded-lg text-[#B07BD4] bg-[#FBF5FF]">✓ 保存済み</span>
-            <% else %>
-              <%= button_to '🔖 保存', '/favorites',
-                            params: { serifu: serifu, genre: @generation['genre'] },
-                            form_class: 'inline',
-                            class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6] cursor-pointer' %>
+          <div class="flex gap-1.5">
+            <% if @logged_in %>
+              <% if @saved_serifus.include?(serifu) %>
+                <span class="text-xs px-2.5 py-1 border border-[#EDD8FF] rounded-lg text-[#B07BD4] bg-[#FBF5FF]">❤ いいね済み</span>
+              <% else %>
+                <%= button_to '♡ いいね', '/favorites',
+                              params: { serifu: serifu, genre: @generation['genre'] },
+                              form_class: 'inline',
+                              class: 'text-xs px-2.5 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-white hover:border-[#5B5BD6] cursor-pointer' %>
+              <% end %>
             <% end %>
-          <% end %>
-          <button type="button"
-                  class="text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#5B5BD6]"
-                  data-serifu="<%= serifu %>">❐ コピー</button>
+            <button type="button"
+                    class="text-xs px-2.5 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-white hover:border-[#5B5BD6]"
+                    data-serifu="<%= serifu %>">❐ コピー</button>
+          </div>
         </div>
+        <p class="text-sm leading-relaxed"><%= serifu %></p>
       </li>
     <% end %>
   </ul>
 </div>
 
 <%# ===== アクションボタン ===== %>
-<div class="flex gap-2 p-3 bg-[#FAFAF8] flex-shrink-0">
+<div class="flex gap-2 p-3 mb-16 bg-[#FAFAF8] flex-shrink-0">
   <%= link_to '↩ もう一回', root_path,
               class: 'flex-1 py-3 text-center bg-[#FAFAF8] border border-[#E0DDD9] text-[#555555] text-sm font-semibold rounded-lg hover:opacity-90' %>
   <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape("セリフさんで生成したセリフ\n#セリフさん") %>"

@@ -9,7 +9,8 @@ class GenerationsController < ApplicationController
   def show
     return redirect_to(root_path) unless logged_in?
 
-    record = current_user.generations.find_by(id: session[:latest_generation_id])
+    target_id = params[:id].presence || session[:latest_generation_id]
+    record    = current_user.generations.find_by(id: target_id)
     return redirect_to(root_path) unless record
 
     @generation    = { 'genre' => record.genre, 'theme' => record.theme, 'serifus' => record.serifus }

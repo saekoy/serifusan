@@ -1,9 +1,9 @@
-<% content_for :title, 'お気に入り' %>
+<% content_for :title, 'いいね' %>
 
 <header class="flex items-center justify-between px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
-  <h1 class="text-base font-bold">🔖 お気に入り</h1>
+  <h1 class="text-base font-bold">❤️ いいね</h1>
   <% if @logged_in && @favorites.any? %>
-    <span class="text-xs text-[#888888]"><%= @favorites.size %>件保存中</span>
+    <span class="text-xs text-[#888888]"><%= @favorites.size %>件</span>
   <% end %>
 </header>
 
@@ -24,46 +24,46 @@
         <% @favorites.each do |f| %>
           <% genre = Genre.find(f.genre) %>
           <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5">
-            <div class="flex items-start gap-2">
-              <p class="text-sm leading-relaxed flex-1 text-[#1F1F1F]">
-                <% if genre %>
-                  <span class="text-[13px] mr-1 align-middle" aria-hidden="true"><%= genre[:emoji] %></span>
-                <% end %>
-                <%= f.serifu %>
-              </p>
-              <%= button_to '🗑', favorite_path(f), method: :delete,
-                            form: { data: { turbo_confirm: 'このお気に入りを削除しますか？' } },
-                            class: 'text-xs px-2 py-1 border border-[#FDE8EF] rounded-lg text-[#F9A8D4] bg-white hover:opacity-90' %>
-            </div>
+            <p class="text-sm leading-relaxed text-[#1F1F1F]">
+              <% if genre %>
+                <span class="text-[13px] mr-1 align-middle" aria-hidden="true"><%= genre[:emoji] %></span>
+              <% end %>
+              <%= f.serifu %>
+            </p>
             <% if f.memo.present? %>
-              <div class="flex items-center gap-2 mt-2">
-                <span class="text-[11px] text-[#888888] truncate flex-1">📝 <%= f.memo %></span>
+              <div class="mt-2">
+                <span class="text-[11px] text-[#888888] truncate block">📝 <%= f.memo %></span>
               </div>
             <% end %>
-            <details class="mt-1.5 group">
-              <summary class="text-[11px] text-[#5B5BD6] cursor-pointer list-none hover:opacity-80">
-                <%= f.memo.present? ? 'メモを編集' : 'メモを追加' %>
-              </summary>
-              <%= form_with url: favorite_path(f), method: :patch, class: 'mt-1.5 flex gap-1.5' do |form| %>
-                <%= form.text_area :memo, value: f.memo, rows: 1,
-                                   placeholder: 'メモ（使った配信、アレンジなど）',
-                                   class: 'flex-1 text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5 resize-none focus:border-[#5B5BD6] focus:outline-none' %>
-                <%= form.submit '保存',
-                                class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-white hover:border-[#5B5BD6] cursor-pointer' %>
-              <% end %>
-            </details>
+            <div class="flex items-center justify-between gap-2 mt-2">
+              <details class="group flex-1 min-w-0">
+                <summary class="text-[11px] text-[#5B5BD6] cursor-pointer list-none hover:opacity-80">
+                  <%= f.memo.present? ? 'メモを編集' : 'メモを追加' %>
+                </summary>
+                <%= form_with url: favorite_path(f), method: :patch, class: 'mt-1.5 flex gap-1.5' do |form| %>
+                  <%= form.text_area :memo, value: f.memo, rows: 1,
+                                     placeholder: 'メモ（使った配信、アレンジなど）',
+                                     class: 'flex-1 text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5 resize-none focus:border-[#5B5BD6] focus:outline-none' %>
+                  <%= form.submit '保存',
+                                  class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-white hover:border-[#5B5BD6] cursor-pointer' %>
+                <% end %>
+              </details>
+              <%= button_to '🗑', favorite_path(f), method: :delete,
+                            form: { data: { turbo_confirm: 'このいいねを削除しますか？' }, class: 'flex-shrink-0' },
+                            class: 'text-xs px-2 py-1 border border-[#FDE8EF] rounded-lg text-[#F9A8D4] bg-white hover:opacity-90' %>
+            </div>
           </li>
         <% end %>
       </ul>
     </div>
   <% else %>
     <div class="flex-1 px-4 py-6 text-sm text-[#888888]">
-      まだお気に入りはありません。
+      まだいいねしたセリフはありません。
     </div>
   <% end %>
 <% else %>
   <%= render 'shared/login_required',
-             message: 'お気に入りに保存したセリフは、ログインするといつでも見返せます。' %>
+             message: 'いいねしたセリフは、ログインするといつでも見返せます。' %>
 <% end %>
 
 <%= render 'shared/bottom_nav', active: :saved %>
