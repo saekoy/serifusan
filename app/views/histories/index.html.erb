@@ -24,21 +24,23 @@
         <% @generations.each do |g| %>
           <% genre = Genre.find(g.genre) %>
           <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5 shadow-sm">
-            <div class="flex items-center justify-between mb-2">
-              <% if genre %>
-                <span class="text-[11px]"><%= genre[:emoji] %></span>
-              <% end %>
-              <span class="text-[11px] text-[#888888]"><%= g.created_at.strftime('%-m/%-d') %></span>
+            <div class="flex items-center justify-end mb-2">
+              <span class="text-[11px] text-[#888888]"><%= g.created_at.strftime('%Y/%-m/%-d') %></span>
             </div>
-            <div class="text-[13px] text-[#555555] mb-1.5">テーマ：<%= g.theme %></div>
+            <% if g.theme.present? %>
+              <div class="text-[13px] text-[#555555] mb-1.5">テーマ：<%= g.theme %></div>
+            <% end %>
             <details class="group">
               <summary class="text-xs text-[#5B5BD6] cursor-pointer list-none hover:opacity-80">
                 <%= g.serifus.size %>件のセリフを見る <span class="group-open:hidden">▸</span><span class="hidden group-open:inline">▾</span>
               </summary>
               <ul class="mt-2 flex flex-col gap-1">
-                <% g.serifus.each_with_index do |s, i| %>
+                <% g.serifus.each do |s| %>
                   <li class="text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5">
-                    <span class="text-[#888888] mr-1"><%= i + 1 %>.</span> <%= s %>
+                    <% if genre %>
+                      <span class="mr-1 align-middle" aria-hidden="true"><%= genre[:emoji] %></span>
+                    <% end %>
+                    <%= s %>
                   </li>
                 <% end %>
               </ul>

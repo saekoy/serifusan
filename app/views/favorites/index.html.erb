@@ -25,19 +25,21 @@
           <% genre = Genre.find(f.genre) %>
           <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5 shadow-sm">
             <div class="flex items-start gap-2">
-              <p class="text-sm leading-relaxed flex-1 text-[#1F1F1F]"><%= f.serifu %></p>
+              <p class="text-sm leading-relaxed flex-1 text-[#1F1F1F]">
+                <% if genre %>
+                  <span class="text-[13px] mr-1 align-middle" aria-hidden="true"><%= genre[:emoji] %></span>
+                <% end %>
+                <%= f.serifu %>
+              </p>
               <%= button_to '🗑', favorite_path(f), method: :delete,
                             form: { data: { turbo_confirm: 'このお気に入りを削除しますか？' } },
                             class: 'text-xs px-2 py-1 border border-[#FDE8EF] rounded-lg text-[#F9A8D4] bg-white hover:opacity-90' %>
             </div>
-            <div class="flex items-center gap-2 mt-2">
-              <% if genre %>
-                <span class="text-[11px]"><%= genre[:emoji] %></span>
-              <% end %>
-              <% if f.memo.present? %>
+            <% if f.memo.present? %>
+              <div class="flex items-center gap-2 mt-2">
                 <span class="text-[11px] text-[#888888] truncate flex-1">📝 <%= f.memo %></span>
-              <% end %>
-            </div>
+              </div>
+            <% end %>
             <details class="mt-1.5 group">
               <summary class="text-[11px] text-[#5B5BD6] cursor-pointer list-none hover:opacity-80">
                 <%= f.memo.present? ? 'メモを編集' : 'メモを追加' %>

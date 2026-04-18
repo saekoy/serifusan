@@ -25,14 +25,14 @@ class GeminiService
       'あなたはVライバー向けのセリフ生成AIです。',
       "以下の条件に合ったセリフを#{COUNT}個生成してください。",
       '',
-      "【ジャンル】#{genre_name}",
-      "【テーマ】#{@theme}"
+      "【ジャンル】#{genre_name}"
     ]
+    lines << "【テーマ】#{@theme}" if @theme.present?
     lines << "【一人称】#{@first_person}" if @first_person.present?
     lines << "【口調】#{@tone}" if @tone.present? && @tone != '指定なし'
     lines << "【キャラ設定】#{@character}" if @character.present?
     lines << ''
-    lines << '出力：セリフのみのJSON配列。説明不要。各50文字以内の自然な日本語で。'
+    lines << '出力：セリフのみのJSON配列。説明不要。各40〜50文字程度の自然な日本語で。'
     lines << '例：["セリフ1","セリフ2"]'
     lines.join("\n")
   end

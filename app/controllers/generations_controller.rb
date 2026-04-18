@@ -18,11 +18,6 @@ class GenerationsController < ApplicationController
   end
 
   def create
-    if params[:theme].blank?
-      redirect_to root_path, alert: 'テーマを入力してください。'
-      return
-    end
-
     # 入力長ガード（長文プロンプトでの過課金防止）
     if params[:theme].to_s.length        > THEME_MAX_LENGTH ||
        params[:character].to_s.length    > CHARACTER_MAX_LENGTH ||

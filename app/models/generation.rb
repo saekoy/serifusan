@@ -4,7 +4,6 @@ class Generation < ApplicationRecord
   serialize :serifus, coder: JSON, type: Array
 
   validates :genre,   presence: true
-  validates :theme,   presence: true
   validates :serifus, presence: true
   validate  :serifus_must_not_be_empty
 

@@ -33,3 +33,35 @@ document.addEventListener('click', (e) => {
     setTimeout(() => { btn.textContent = original }, 1500)
   })
 })
+
+// 入力文字数カウンタ（上限が近づくと色が変わる）
+const updateCounter = (input) => {
+  const name = input.dataset.counterTarget
+  const max = Number(input.dataset.counterMax)
+  const label = document.querySelector(`[data-counter-for="${name}"]`)
+  if (!label) return
+  const current = input.value.length
+  const currentEl = label.querySelector('[data-counter-current]')
+  if (currentEl) currentEl.textContent = current
+  const ratio = current / max
+  label.classList.remove('text-[#888888]', 'text-[#D4A017]', 'text-[#DC2626]')
+  if (ratio >= 1) {
+    label.classList.add('text-[#DC2626]')
+  } else if (ratio >= 0.8) {
+    label.classList.add('text-[#D4A017]')
+  } else {
+    label.classList.add('text-[#888888]')
+  }
+}
+
+document.addEventListener('turbo:load', () => {
+  document.querySelectorAll('[data-counter-target]').forEach((input) => {
+    updateCounter(input)
+  })
+})
+
+document.addEventListener('input', (e) => {
+  if (e.target.dataset && e.target.dataset.counterTarget) {
+    updateCounter(e.target)
+  }
+})
