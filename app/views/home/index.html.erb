@@ -45,7 +45,7 @@
     <%# ジャンル %>
     <div class="mt-[18px] mb-2 text-[11px] font-semibold text-[#888888] tracking-wider uppercase">ジャンル</div>
     <div class="grid grid-cols-3 gap-2">
-      <% @genres.each_with_index do |g, i| %>
+      <% Genre.all.each_with_index do |g, i| %>
         <label class="block cursor-pointer">
           <%= f.radio_button :genre, g[:slug], checked: i.zero?, class: 'peer hidden' %>
           <div class="py-3 px-1.5 border border-[#E0DDD9] bg-[#FAFAF8] rounded-lg text-center transition peer-checked:bg-[#EEEDF8] peer-checked:border-[#5B5BD6]">

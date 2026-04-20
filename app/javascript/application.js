@@ -42,6 +42,10 @@ document.addEventListener('click', (e) => {
 })
 
 // 入力文字数カウンタ（上限が近づくと色が変わる）
+// Tailwindのarbitrary classはビルド時にスキャンされる必要があるため、
+// 動的に切り替える色は style.color で直接指定する。
+const COUNTER_COLORS = { normal: '#888888', warning: '#D4A017', danger: '#DC2626' }
+
 const updateCounter = (input) => {
   const name = input.dataset.counterTarget
   const max = Number(input.dataset.counterMax)
@@ -51,13 +55,12 @@ const updateCounter = (input) => {
   const currentEl = label.querySelector('[data-counter-current]')
   if (currentEl) currentEl.textContent = current
   const ratio = current / max
-  label.classList.remove('text-[#888888]', 'text-[#D4A017]', 'text-[#DC2626]')
   if (ratio >= 1) {
-    label.classList.add('text-[#DC2626]')
+    label.style.color = COUNTER_COLORS.danger
   } else if (ratio >= 0.8) {
-    label.classList.add('text-[#D4A017]')
+    label.style.color = COUNTER_COLORS.warning
   } else {
-    label.classList.add('text-[#888888]')
+    label.style.color = COUNTER_COLORS.normal
   }
 }
 

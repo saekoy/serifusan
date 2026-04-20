@@ -31,7 +31,8 @@ class SessionsController < ApplicationController
 
   # DELETE /sessions
   def destroy
-    session.delete(:user_id)
+    # 古いセッション（latest_generation_id, gen_count 等）をまとめて破棄
+    reset_session
     head :ok
   end
 end

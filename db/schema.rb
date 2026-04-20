@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_17_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_18_100001) do
   create_table "contacts", force: :cascade do |t|
     t.text "body", null: false
     t.datetime "created_at", null: false
-    t.string "email", null: false
+    t.string "email"
     t.string "name", null: false
     t.datetime "updated_at", null: false
   end
@@ -35,7 +35,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_100000) do
     t.datetime "created_at", null: false
     t.string "genre", null: false
     t.text "serifus", null: false
-    t.string "theme", null: false
+    t.string "theme"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id", "created_at"], name: "index_generations_on_user_id_and_created_at"
