@@ -44,6 +44,17 @@
 
     <%# Google Identity Services（Firebase Auth の認証トークン取得に利用） %>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <%# Google Analytics (GA4) — 本番環境のみ出力（ローカルは計測しない） %>
+    <% if Rails.env.production? && ENV['GA_MEASUREMENT_ID'].present? %>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ENV['GA_MEASUREMENT_ID'] %>"></script>
+      <%= javascript_tag nonce: true do %>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '<%= j ENV['GA_MEASUREMENT_ID'] %>');
+      <% end %>
+    <% end %>
   </head>
 
   <body class="min-h-screen bg-[#F2F0ED] text-[#1F1F1F]">
