@@ -21,9 +21,9 @@ RSpec.describe Generation, type: :model do
       expect(g).to be_invalid
     end
 
-    it 'themeがなければ無効' do
+    it 'themeがなくても有効（テーマ任意）' do
       g = Generation.new(user: user, genre: 'romance', serifus: ['A'])
-      expect(g).to be_invalid
+      expect(g).to be_valid
     end
 
     it 'serifusが空配列なら無効' do

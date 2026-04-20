@@ -35,7 +35,7 @@ RSpec.describe 'Home', type: :request do
     end
 
     it 'ボトムナビ4項目が表示される' do
-      %w[ホーム お気に入り 履歴 アプリについて].each do |label|
+      %w[ホーム いいね 履歴 設定].each do |label|
         expect(response.body).to include(label)
       end
     end

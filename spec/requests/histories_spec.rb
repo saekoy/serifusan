@@ -10,11 +10,11 @@ RSpec.describe 'Histories', type: :request do
       end
 
       it 'ログイン誘導メッセージを表示する' do
-        expect(response.body).to include('ログインが必要です')
+        expect(response.body).to include('過去に生成したセリフは、ログインすると履歴から見返せます')
       end
 
       it 'ログインCTAが表示される' do
-        expect(response.body).to include('ログインする')
+        expect(response.body).to include('data-gis-button')
       end
 
       it 'ボトムナビが表示される' do

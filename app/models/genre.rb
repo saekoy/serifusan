@@ -15,4 +15,8 @@ class Genre
   def self.find(slug)
     LIST.find { |g| g[:slug] == slug }
   end
+
+  def self.slugs
+    LIST.map { |g| g[:slug] } # rubocop:disable Rails/Pluck
+  end
 end

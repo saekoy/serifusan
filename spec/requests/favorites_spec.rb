@@ -19,15 +19,15 @@ RSpec.describe 'Favorites', type: :request do
       end
 
       it 'ログイン誘導メッセージを表示する' do
-        expect(response.body).to include('ログインが必要です')
+        expect(response.body).to include('いいねしたセリフは、ログインするといつでも見返せます')
       end
 
       it 'ログインCTAが表示される' do
-        expect(response.body).to include('ログインする')
+        expect(response.body).to include('data-gis-button')
       end
 
       it 'ボトムナビが表示される' do
-        expect(response.body).to include('お気に入り')
+        expect(response.body).to include('いいね')
       end
     end
 
@@ -37,7 +37,7 @@ RSpec.describe 'Favorites', type: :request do
       context 'お気に入りがない場合' do
         it '空メッセージを表示する' do
           get '/favorites'
-          expect(response.body).to include('まだお気に入りはありません')
+          expect(response.body).to include('まだいいねしたセリフはありません')
         end
       end
 

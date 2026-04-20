@@ -10,16 +10,10 @@ RSpec.describe 'Generations', type: :request do
   describe 'POST /generations' do
     let(:valid_params) { { genre: 'romance', theme: '雨の日の告白' } }
 
-    it '結果ページにリダイレクトする' do
+    it '未ログイン時は結果ページを直接レンダリングする' do
       post '/generations', params: valid_params
-      expect(response).to redirect_to('/result')
-    end
-
-    it 'セッションに結果を保存する' do
-      post '/generations', params: valid_params
-      expect(session[:latest_generation]).to be_present
-      expect(session[:latest_generation]['serifus']).to eq(serifus)
-      expect(session[:latest_generation]['genre']).to eq('romance')
+      expect(response).to have_http_status(:success)
+      serifus.each { |s| expect(response.body).to include(s) }
     end
 
     it '未ログインの生成回数カウントを増やす' do
@@ -126,8 +120,16 @@ RSpec.describe 'Generations', type: :request do
   end
 
   describe 'GET /result' do
-    context 'セッションに結果がある場合' do
-      before { post '/generations', params: { genre: 'romance', theme: '雨の日の告白' } }
+    let(:verified_payload) do
+      { uid: 'uid-1', email: 'a@example.com', display_name: 'A', photo_url: nil, provider: 'google.com' }
+    end
+
+    context 'ログイン中で直前の生成がある場合' do
+      before do
+        allow(FirebaseTokenVerifier).to receive(:verify).and_return(verified_payload)
+        post '/sessions', params: { id_token: 'valid' }
+        post '/generations', params: { genre: 'romance', theme: '雨の日の告白' }
+      end
 
       it '200を返す' do
         get '/result'
@@ -147,18 +149,14 @@ RSpec.describe 'Generations', type: :request do
       end
     end
 
-    context 'セッションに結果がない場合' do
+    context '未ログイン時' do
       it 'ホームにリダイレクトする' do
         get '/result'
         expect(response).to redirect_to(root_path)
       end
     end
 
-    context 'ログイン中で一部が既にお気に入り登録済みの場合' do
-      let(:verified_payload) do
-        { uid: 'uid-1', email: 'a@example.com', display_name: 'A', photo_url: nil, provider: 'google.com' }
-      end
-
+    context 'ログイン中で一部が既にいいね登録済みの場合' do
       before do
         allow(FirebaseTokenVerifier).to receive(:verify).and_return(verified_payload)
         post '/sessions', params: { id_token: 'valid' }
@@ -167,14 +165,14 @@ RSpec.describe 'Generations', type: :request do
         Favorite.create!(user: user, serifu: 'セリフ1', genre: 'romance')
       end
 
-      it '保存済みセリフは「保存済み」と表示される' do
+      it '保存済みセリフは「いいね済み」と表示される' do
         get '/result'
-        expect(response.body).to include('保存済み')
+        expect(response.body).to include('いいね済み')
       end
 
-      it '未保存セリフは「保存」ボタンのまま' do
+      it '未保存セリフは「いいね」ボタン（form_with /favorites）のまま' do
         get '/result'
-        expect(response.body).to include('🔖 保存')
+        expect(response.body).to match(%r{<form[^>]+action="/favorites"})
       end
     end
   end
