@@ -2,11 +2,40 @@
   Required local:
     message: String — 未ログイン時の説明文
 %>
-<div class="flex-1 flex flex-col items-center justify-center px-6 py-10 text-center">
-  <div class="text-5xl mb-4">🔒</div>
-  <p class="text-sm text-[#1F1F1F] font-bold mb-2">ログインが必要です</p>
-  <p class="text-xs text-[#888888] mb-6 leading-relaxed"><%= message %></p>
-  <div data-gis-button class="flex justify-center">
-    <span class="text-xs text-[#5B5BD6] font-bold">ログインする</span>
+<div class="flex-1 flex flex-col items-center px-7 pt-10 pb-24">
+  <div class="flex flex-col items-center mb-5">
+    <div class="w-[60px] h-[60px] border-[1.5px] border-[#5B5BD6] rounded-lg flex items-center justify-center mb-4 -rotate-3 bg-[#FAFAF8]">
+      <svg viewBox="0 0 30 30" fill="none" stroke="#5B5BD6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-[30px] h-[30px]">
+        <path d="M6 7 H 24 V 19 H 15 L 10 24 L 10 19 H 6 Z"/>
+        <circle cx="11" cy="13" r="0.9" fill="#5B5BD6"/>
+        <circle cx="15" cy="13" r="0.9" fill="#5B5BD6"/>
+        <circle cx="19" cy="13" r="0.9" fill="#5B5BD6"/>
+      </svg>
+    </div>
+    <span class="wavy-underline text-[22px] font-bold">ログイン</span>
+  </div>
+
+  <p class="text-[13px] text-[#888888] leading-[1.7] text-center mt-4 mb-5"><%= message %></p>
+
+  <div class="w-full border border-[#E0DDD9] rounded-lg px-[18px] py-4 mb-6 flex flex-col gap-3">
+    <% [
+      '生成回数が無制限に',
+      'いいねしたセリフを保存できる',
+      'どの端末からでも見返せる'
+    ].each do |benefit| %>
+      <div class="text-[13px] flex items-center gap-2.5 text-[#1F1F1F]">
+        <svg viewBox="0 0 16 16" fill="none" stroke="#5B5BD6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 flex-shrink-0">
+          <path d="M2 8 L 6 12 L 14 3"/>
+        </svg>
+        <%= benefit %>
+      </div>
+    <% end %>
+  </div>
+
+  <div data-gis-button class="flex justify-center w-full"></div>
+
+  <div class="text-[11px] text-[#888888] text-center leading-[1.8] mt-4 font-mono tracking-wide">
+    — Google ログインのみ対応 —<br>
+    メールアドレスでの登録は未対応
   </div>
 </div>

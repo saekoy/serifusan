@@ -1,66 +1,84 @@
 <% content_for :title, 'いいね' %>
 
-<header class="flex items-center justify-between px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
-  <h1 class="text-base font-bold">❤️ いいね</h1>
+<header class="flex items-end justify-between px-5 pt-7 pb-4 border-b border-[#E0DDD9] flex-shrink-0">
+  <h1 class="text-[22px] font-bold inline-flex items-center gap-2">
+    <svg viewBox="0 0 18 18" fill="none" stroke="#5B5BD6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px]">
+      <path d="M4 2 H 14 V 16 L 9 13 L 4 16 Z"/>
+    </svg>
+    <span class="wavy-underline">いいね</span>
+  </h1>
   <% if @logged_in && @favorites.any? %>
-    <span class="text-xs text-[#888888]"><%= @favorites.size %>件</span>
+    <span class="font-mono text-[11px] text-[#888888] tracking-wider"><%= @favorites.size %> items</span>
   <% end %>
 </header>
 
 <% if @logged_in %>
-  <div class="flex gap-1.5 overflow-x-auto px-4 pt-3 pb-1 flex-shrink-0">
-    <%= link_to 'すべて', favorites_path,
-                class: "text-xs px-3 py-1 rounded-full border whitespace-nowrap #{@genre_filter.nil? ? 'bg-[#5B5BD6] text-white border-transparent' : 'bg-white text-[#B07BD4] border-[#EDD8FF]'}" %>
-    <% Genre.all.each do |g| %>
-      <%= link_to g[:emoji], favorites_path(genre: g[:slug]),
-                  title: g[:name],
-                  class: "text-xs px-3 py-1 rounded-full border whitespace-nowrap #{@genre_filter == g[:slug] ? 'bg-[#5B5BD6] text-white border-transparent' : 'bg-white text-[#B07BD4] border-[#EDD8FF]'}" %>
-    <% end %>
-  </div>
+  <div class="flex-1 overflow-y-auto px-[18px] pt-4 pb-24">
+    <%# === ジャンルフィルタ === %>
+    <div class="flex gap-1.5 flex-wrap mb-4">
+      <%= link_to favorites_path,
+                  class: "relative px-3 py-1.5 border rounded-lg text-[12px] bg-[#FAFAF8] #{@genre_filter.nil? ? 'border-[1.5px] border-[#5B5BD6] text-[#1F1F1F] font-bold pr-3 pl-3' : 'border-[#E0DDD9] text-[#555555]'}" do %>
+        すべて<% if @genre_filter.nil? %><span class="absolute bottom-1 right-1 w-1 h-1 rounded-full bg-[#5B5BD6]"></span><% end %>
+      <% end %>
+      <% Genre.all.each do |g| %>
+        <% active = (@genre_filter == g[:slug]) %>
+        <%= link_to favorites_path(genre: g[:slug]), title: g[:name],
+                    class: "relative px-3 py-1.5 border rounded-lg text-[12px] bg-[#FAFAF8] inline-flex items-center gap-1.5 #{active ? 'border-[1.5px] border-[#5B5BD6] text-[#1F1F1F] font-bold' : 'border-[#E0DDD9] text-[#555555]'}" do %>
+          <span class="w-2.5 h-2.5"><%= render 'shared/genre_icon', slug: g[:slug] %></span>
+          <%= g[:name] %>
+          <% if active %><span class="absolute bottom-1 right-1 w-1 h-1 rounded-full bg-[#5B5BD6]"></span><% end %>
+        <% end %>
+      <% end %>
+    </div>
 
-  <% if @favorites.any? %>
-    <div class="flex-1 overflow-y-auto px-4 py-4 pb-24">
-      <ul class="flex flex-col gap-3">
+    <% if @favorites.any? %>
+      <ul class="flex flex-col gap-2.5">
         <% @favorites.each do |f| %>
           <% genre = Genre.find(f.genre) %>
-          <li class="bg-white border border-[#E0DDD9] rounded-xl p-3.5">
-            <p class="text-sm leading-relaxed text-[#1F1F1F]">
-              <% if genre %>
-                <span class="text-[13px] mr-1 align-middle" aria-hidden="true"><%= genre[:emoji] %></span>
-              <% end %>
-              <%= f.serifu %>
-            </p>
-            <% if f.memo.present? %>
-              <div class="mt-2">
-                <span class="text-[11px] text-[#888888] truncate block">📝 <%= f.memo %></span>
+          <li class="bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg p-3.5">
+            <div class="flex items-start gap-2.5 mb-2.5">
+              <p class="flex-1 text-sm leading-[1.7] text-[#1F1F1F]"><%= f.serifu %></p>
+              <div class="flex gap-1.5 flex-shrink-0">
+                <button type="button"
+                        class="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-[#E0DDD9] bg-[#FAFAF8] text-[#888888] hover:border-[#C8C4B8]"
+                        data-serifu="<%= f.serifu %>" aria-label="コピー">
+                  <svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><rect x="3" y="3" width="7" height="8" rx="1"/><path d="M3 6 H 2 V 2 H 7 V 3"/></svg>
+                </button>
+                <%= button_to favorite_path(f), method: :delete,
+                              form: { data: { turbo_confirm: 'このいいねを削除しますか？' }, class: 'inline-block' },
+                              class: 'w-7 h-7 inline-flex items-center justify-center rounded-lg border border-[#E0DDD9] bg-[#FAFAF8] text-[#888888] hover:border-[#C8C4B8] cursor-pointer',
+                              aria: { label: '削除' } do %>
+                  <svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M3 4 L 10 4"/><path d="M4.5 4 V 10.5 H 8.5 V 4"/><path d="M5.5 4 V 2.5 H 7.5 V 4"/></svg>
+                <% end %>
+              </div>
+            </div>
+
+            <% if genre %>
+              <div class="text-[11px] text-[#5B5BD6] border border-[#5B5BD6] bg-[#FAFAF8] px-2 pt-0.5 pb-[3px] rounded-lg inline-flex items-center gap-1.5 -rotate-1">
+                <span class="w-2.5 h-2.5"><%= render 'shared/genre_icon', slug: genre[:slug] %></span>
+                <%= genre[:name] %>
               </div>
             <% end %>
-            <div class="flex items-center justify-between gap-2 mt-2">
-              <details class="group flex-1 min-w-0">
-                <summary class="text-[11px] text-[#5B5BD6] cursor-pointer list-none hover:opacity-80">
-                  <%= f.memo.present? ? 'メモを編集' : 'メモを追加' %>
-                </summary>
-                <%= form_with url: favorite_path(f), method: :patch, class: 'mt-1.5 flex gap-1.5' do |form| %>
-                  <%= form.text_area :memo, value: f.memo, rows: 1,
-                                     placeholder: 'メモ（使った配信、アレンジなど）',
-                                     class: 'flex-1 text-xs text-[#555555] bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg px-2.5 py-1.5 resize-none focus:border-[#5B5BD6] focus:outline-none' %>
-                  <%= form.submit '保存',
-                                  class: 'text-xs px-3 py-1 border border-[#E0DDD9] rounded-lg text-[#555555] bg-white hover:border-[#5B5BD6] cursor-pointer' %>
-                <% end %>
-              </details>
-              <%= button_to '🗑', favorite_path(f), method: :delete,
-                            form: { data: { turbo_confirm: 'このいいねを削除しますか？' }, class: 'flex-shrink-0' },
-                            class: 'text-xs px-2 py-1 border border-[#FDE8EF] rounded-lg text-[#F9A8D4] bg-white hover:opacity-90' %>
-            </div>
+
+            <details class="mt-2.5">
+              <summary class="text-[11px] text-[#5B5BD6] cursor-pointer list-none hover:opacity-80 inline-block">
+                <%= f.memo.present? ? "メモ：#{f.memo.truncate(40)}" : 'メモを追加' %>
+              </summary>
+              <%= form_with url: favorite_path(f), method: :patch, class: 'mt-2 flex gap-1.5' do |form| %>
+                <%= form.text_area :memo, value: f.memo, rows: 1,
+                                   placeholder: 'メモ（使った配信、アレンジなど）',
+                                   class: 'flex-1 px-2.5 py-2 text-xs text-[#1F1F1F] bg-[#FAFAF8] border border-dashed border-[#D4D0CB] rounded-lg resize-none focus:border-solid focus:border-[#5B5BD6] focus:outline-none placeholder:text-[#BBBBBB] placeholder:italic' %>
+                <%= form.submit '保存',
+                                class: 'text-xs px-3 border border-[#E0DDD9] rounded-lg text-[#555555] bg-[#FAFAF8] hover:border-[#C8C4B8] cursor-pointer' %>
+              <% end %>
+            </details>
           </li>
         <% end %>
       </ul>
-    </div>
-  <% else %>
-    <div class="flex-1 px-4 py-6 text-sm text-[#888888]">
-      まだいいねしたセリフはありません。
-    </div>
-  <% end %>
+    <% else %>
+      <p class="text-sm text-[#888888] text-center mt-10">まだいいねしたセリフはありません。</p>
+    <% end %>
+  </div>
 <% else %>
   <%= render 'shared/login_required',
              message: 'いいねしたセリフは、ログインするといつでも見返せます。' %>

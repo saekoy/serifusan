@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Serifusan" %></title>
+    <title><%= content_for(:title) || "セリフさん" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Serifusan">
+    <meta name="application-name" content="セリフさん">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#FAFAF8">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <meta name="logged-in" content="<%= logged_in? %>">
@@ -28,25 +29,40 @@
   </head>
 
   <body class="min-h-screen bg-[#F2F0ED] text-[#1F1F1F]">
-    <main class="max-w-md mx-auto min-h-screen bg-[#FAFAF8] flex flex-col border border-[#E0DDD9] md:my-5 md:rounded-lg overflow-hidden">
+    <main class="max-w-md mx-auto min-h-screen bg-[#FAFAF8] flex flex-col border-[1.5px] border-[#E0DDD9] md:my-5 md:rounded-lg overflow-hidden relative">
       <% flash.each do |type, msg| %>
-        <div class="px-4 py-2.5 text-xs border-b <%= type.to_s == 'alert' ? 'bg-[#FEF2F2] text-[#991B1B] border-[#FCA5A5]' : 'bg-[#F0F9FF] text-[#075985] border-[#7DD3FC]' %>">
+        <div class="px-4 py-2.5 text-xs border-b border-[#E0DDD9] bg-[#F0EFEC] text-[#555555]">
           <%= msg %>
         </div>
       <% end %>
       <%= yield %>
     </main>
 
-    <%# ===== 生成中ローディングオーバーレイ ===== %>
-    <div id="loading-overlay" class="hidden fixed inset-0 bg-black/40 z-50 items-center justify-center backdrop-blur-sm flex">
-      <div class="bg-[#FAFAF8] rounded-lg px-8 py-6 flex flex-col items-center gap-3 border border-[#E0DDD9]">
-        <div class="text-4xl animate-pulse">✨</div>
-        <div class="flex gap-1.5">
-          <span class="w-2 h-2 bg-[#5B5BD6] rounded-full animate-bounce"></span>
-          <span class="w-2 h-2 bg-[#5B5BD6] rounded-full animate-bounce [animation-delay:0.15s]"></span>
-          <span class="w-2 h-2 bg-[#5B5BD6] rounded-full animate-bounce [animation-delay:0.3s]"></span>
+    <%# ===== 生成中ローディングオーバーレイ（紙とペン） ===== %>
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-[#F2F0ED]/80 z-50 items-center justify-center backdrop-blur-sm flex">
+      <div class="bg-[#FAFAF8] rounded-lg px-8 py-10 flex flex-col items-center gap-7 border-[1.5px] border-[#E0DDD9] max-w-xs">
+        <div class="w-[120px] h-[120px]">
+          <svg viewBox="0 0 120 120" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full">
+            <rect x="15" y="25" width="80" height="70" rx="4" fill="#FAFAF8" stroke="#C8C4B8" stroke-width="1.2"/>
+            <path d="M25 45 L 70 45" stroke="#D4D0CB" stroke-width="1.2"/>
+            <path d="M25 58 L 80 58" stroke="#D4D0CB" stroke-width="1.2"/>
+            <path class="scribble-line" d="M25 72 Q 40 70, 55 72 T 80 72" stroke="#5B5BD6" stroke-width="1.6" fill="none"/>
+            <g class="pen-group">
+              <path d="M70 40 L 95 15 L 102 22 L 77 47 Z" fill="#FAFAF8" stroke="#1F1F1F" stroke-width="1.3"/>
+              <path d="M70 40 L 67 50 L 77 47 Z" fill="#5B5BD6" stroke="#1F1F1F" stroke-width="1.3"/>
+              <path d="M88 22 L 95 29" stroke="#1F1F1F" stroke-width="1.3"/>
+            </g>
+          </svg>
         </div>
-        <div class="text-sm text-[#888888]">セリフを考えているよ…</div>
+        <div class="flex gap-2.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#5B5BD6] pen-dot"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[#5B5BD6] pen-dot" style="animation-delay:0.18s"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-[#5B5BD6] pen-dot" style="animation-delay:0.36s"></span>
+        </div>
+        <div class="flex flex-col items-center gap-3">
+          <span class="wavy-underline text-[15px] font-semibold text-[#555555] tracking-wide">セリフを考えているよ</span>
+          <span class="text-[12px] text-[#888888] font-mono tracking-wider">writing for you…</span>
+        </div>
       </div>
     </div>
   </body>

@@ -2,17 +2,29 @@
   Required local:
     active: Symbol — :home / :saved / :history / :about
 %>
-<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#FAFAF8] border-t border-[#E0DDD9] flex justify-around py-2 z-40">
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#FAFAF8] border-t border-[#E0DDD9] flex z-40">
   <% items = [
-    { key: :home,    label: 'ホーム',         icon: '🏠', path: root_path },
-    { key: :saved,   label: 'いいね',         icon: '❤️', path: favorites_path },
-    { key: :history, label: '履歴',           icon: '🕐', path: histories_path },
-    { key: :about,   label: 'アプリについて', icon: '⚙️', path: about_path }
+    {
+      key: :home, label: 'ホーム', path: root_path,
+      svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M3 11 L 12 3 L 21 11 V 20 H 3 Z"/></svg>'
+    },
+    {
+      key: :saved, label: 'いいね', path: favorites_path,
+      svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 20 C 4 14, 4 6, 9 6 C 11 6, 12 8, 12 8 C 12 8, 13 6, 15 6 C 20 6, 20 14, 12 20 Z"/></svg>'
+    },
+    {
+      key: :history, label: '履歴', path: histories_path,
+      svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><circle cx="12" cy="12" r="9"/><path d="M12 7 V 12 L 15.5 14.5"/></svg>'
+    },
+    {
+      key: :about, label: '設定', path: about_path,
+      svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><circle cx="12" cy="12" r="3"/><path d="M12 3 V 6 M 12 18 V 21 M 3 12 H 6 M 18 12 H 21 M 5.6 5.6 L 7.7 7.7 M 16.3 16.3 L 18.4 18.4 M 18.4 5.6 L 16.3 7.7 M 7.7 16.3 L 5.6 18.4"/></svg>'
+    }
   ] %>
   <% items.each do |item| %>
     <%= link_to item[:path],
-                class: "flex flex-col items-center gap-0.5 px-3 py-1 text-xs #{item[:key] == active ? 'text-[#5B5BD6] font-bold' : 'text-[#888888]'}" do %>
-      <span class="text-lg leading-none"><%= item[:icon] %></span>
+                class: "relative flex-1 flex flex-col items-center gap-1 pt-2.5 pb-3 text-[10px] #{item[:key] == active ? 'text-[#5B5BD6] font-bold nav-active-mark' : 'text-[#AAAAAA]'}" do %>
+      <span><%= item[:svg].html_safe %></span>
       <span><%= item[:label] %></span>
     <% end %>
   <% end %>

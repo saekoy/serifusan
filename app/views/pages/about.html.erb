@@ -1,64 +1,97 @@
 <% content_for :title, 'アプリについて' %>
 
-<header class="px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
-  <h1 class="text-base font-bold">アプリについて</h1>
+<header class="px-5 pt-8 pb-4 border-b border-[#E0DDD9] flex-shrink-0">
+  <h1 class="wavy-underline text-[20px] font-bold">アプリについて</h1>
 </header>
 
-<div class="flex-1 overflow-y-auto px-4 py-5">
+<div class="flex-1 overflow-y-auto px-5 pt-5 pb-28">
+
   <%# ===== アカウント ===== %>
-  <section class="mb-6">
-    <h2 class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase mb-2">👤 アカウント</h2>
+  <section class="mb-7">
+    <div class="font-mono text-[10px] text-[#888888] tracking-[1.8px] uppercase mb-2.5 flex items-center gap-2 before:content-[''] before:w-3 before:h-px before:bg-[#C8C4B8]">
+      Account
+    </div>
     <% if @logged_in %>
-      <div class="flex items-center gap-3 bg-white border-[1.5px] border-[#EDD8FF] rounded-2xl px-4 py-3 mb-2.5">
+      <div class="border border-[#E0DDD9] rounded-lg p-3.5 flex items-center gap-3 bg-[#FAFAF8]">
         <% if current_user.photo_url.present? %>
-          <img src="<%= current_user.photo_url %>" alt="" class="w-10 h-10 rounded-full object-cover">
+          <img src="<%= current_user.photo_url %>" alt="" class="w-10 h-10 rounded-full object-cover border-[1.5px] border-[#5B5BD6] -rotate-2 flex-shrink-0">
         <% else %>
-          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#A855F7] to-[#EC4899] flex items-center justify-center text-sm text-white font-bold">
+          <div class="w-10 h-10 rounded-full border-[1.5px] border-[#5B5BD6] bg-[#FAFAF8] flex items-center justify-center text-[#5B5BD6] font-bold flex-shrink-0 -rotate-2">
             <%= current_user.display_name&.first || '?' %>
           </div>
         <% end %>
-        <div class="flex-1">
-          <div class="text-sm font-bold text-[#3B1464]"><%= current_user.display_name.presence || current_user.email %></div>
-          <div class="text-xs text-[#B07BD4]">Google でログイン中</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-bold mb-0.5 truncate"><%= current_user.display_name.presence || current_user.email %></div>
+          <div class="font-mono text-[11px] text-[#888888] tracking-wider">signed in with Google</div>
         </div>
       </div>
-      <button type="button"
-              data-signout
-              class="w-full border border-[#F9A8D4] text-[#EC4899] text-sm font-bold rounded-full py-2.5 bg-white cursor-pointer hover:opacity-90">
-        ログアウト
-      </button>
     <% else %>
-      <div class="bg-white border-[1.5px] border-[#EDD8FF] rounded-2xl px-4 py-3.5 text-center">
-        <div class="text-[13px] text-[#B07BD4] mb-3">ログインしていません</div>
-        <div data-gis-button class="flex justify-center">
-          <span class="text-xs text-[#5B5BD6] font-bold">ログインする</span>
-        </div>
+      <div class="border border-[#E0DDD9] rounded-lg p-4 bg-[#FAFAF8]">
+        <p class="text-[13px] text-[#888888] text-center mb-3">ログインしていません</p>
+        <div data-gis-button class="flex justify-center"></div>
       </div>
     <% end %>
   </section>
 
   <%# ===== つくったきっかけ ===== %>
-  <section class="mb-6">
-    <h2 class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase mb-2">✦ つくったきっかけ</h2>
-    <p class="text-[13px] text-[#555555] leading-[1.8]">
+  <section class="mb-7">
+    <div class="font-mono text-[10px] text-[#888888] tracking-[1.8px] uppercase mb-2.5 flex items-center gap-2 before:content-[''] before:w-3 before:h-px before:bg-[#C8C4B8]">
+      つくったきっかけ
+    </div>
+    <p class="text-[13px] text-[#555555] leading-[1.9]">
       セリフ枠配信をするライバーさんが、ネタ切れせず楽しく配信できるように作りました。テーマとジャンルを入れるだけで、AIがキャラに合ったセリフを提案します。
     </p>
   </section>
 
   <%# ===== AIの利用について ===== %>
-  <section class="mb-6">
-    <h2 class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase mb-2">✦ AIの利用について</h2>
-    <p class="text-[13px] text-[#555555] leading-[1.8]">
-      セリフの生成にはGoogle Gemini APIを使用しています。入力内容がGoogleの学習に利用されない設定で運用しています。
+  <section class="mb-7">
+    <div class="font-mono text-[10px] text-[#888888] tracking-[1.8px] uppercase mb-2.5 flex items-center gap-2 before:content-[''] before:w-3 before:h-px before:bg-[#C8C4B8]">
+      AIの利用について
+    </div>
+    <p class="text-[13px] text-[#555555] leading-[1.9]">
+      セリフの生成には Google Gemini API を使用しています。入力内容が Google の学習に利用されない設定で運用しています。
     </p>
   </section>
 
-  <%# ===== お問い合わせ ===== %>
-  <section class="mb-6">
-    <h2 class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase mb-2">✦ お問い合わせ</h2>
-    <%= link_to 'お問い合わせフォーム', contact_path,
-        class: 'block w-full mt-1.5 bg-[#FAFAF8] text-[#555555] text-sm font-semibold rounded-lg py-[13px] text-center border border-[#E0DDD9] hover:opacity-90' %>
+  <%# ===== サポート ===== %>
+  <section class="mb-7">
+    <div class="font-mono text-[10px] text-[#888888] tracking-[1.8px] uppercase mb-2.5 flex items-center gap-2 before:content-[''] before:w-3 before:h-px before:bg-[#C8C4B8]">
+      サポート
+    </div>
+    <div class="border border-[#E0DDD9] rounded-lg overflow-hidden bg-[#FAFAF8]">
+      <%= link_to contact_path,
+                  class: 'flex items-center justify-between px-3.5 py-3 border-b border-[#E0DDD9] hover:bg-[#F5F3EF]' do %>
+        <span class="text-[13px] text-[#1F1F1F] flex items-center gap-2.5">
+          <svg viewBox="0 0 14 14" fill="none" stroke="#888888" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><rect x="2" y="3" width="10" height="8" rx="1"/><path d="M2 4 L 7 7.5 L 12 4"/></svg>
+          お問い合わせ
+        </span>
+        <svg viewBox="0 0 12 12" fill="none" stroke="#888888" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3"><path d="M5 3 L 8 6 L 5 9"/></svg>
+      <% end %>
+    </div>
   </section>
+
+  <%# ===== ログアウト ===== %>
+  <% if @logged_in %>
+    <section class="mb-7">
+      <div class="font-mono text-[10px] text-[#888888] tracking-[1.8px] uppercase mb-2.5 flex items-center gap-2 before:content-[''] before:w-3 before:h-px before:bg-[#C8C4B8]">
+        Account Actions
+      </div>
+      <div class="border border-[#E0DDD9] rounded-lg overflow-hidden bg-[#FAFAF8]">
+        <button type="button" data-signout
+                class="w-full flex items-center justify-between px-3.5 py-3 hover:bg-[#F5F3EF] cursor-pointer text-left">
+          <span class="text-[13px] text-[#555555] flex items-center gap-2.5">
+            <svg viewBox="0 0 14 14" fill="none" stroke="#555555" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M5 3 H 3 V 11 H 5"/><path d="M8 4 L 11 7 L 8 10"/><path d="M11 7 L 6 7"/></svg>
+            ログアウト
+          </span>
+          <svg viewBox="0 0 12 12" fill="none" stroke="#888888" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3"><path d="M5 3 L 8 6 L 5 9"/></svg>
+        </button>
+      </div>
+    </section>
+  <% end %>
+
+  <div class="font-mono text-[10px] text-[#AAAAAA] text-center tracking-wider mt-6">
+    serifu-san · v1.0.0
+  </div>
 </div>
 
 <%= render 'shared/bottom_nav', active: :about %>

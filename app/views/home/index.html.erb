@@ -3,104 +3,124 @@
 <%# ===== ヘッダー ===== %>
 <header class="flex items-center justify-between px-5 pt-8 pb-4 border-b border-[#E0DDD9] flex-shrink-0">
   <div>
-    <h1 class="text-[22px] font-bold">✦ セリフさん</h1>
-    <p class="text-xs text-[#888888] mt-0.5">セリフ枠のセリフをAIが考えてくれる</p>
+    <h1 class="text-[22px] font-bold tracking-wide flex items-center">
+      <span class="inline-block w-2 h-2 bg-[#5B5BD6] rounded-full mr-2 -translate-y-0.5"></span>
+      セリフさん
+    </h1>
+    <p class="text-xs text-[#888888] mt-0.5">セリフ枠のセリフを、AIが考えてくれる</p>
   </div>
   <% if @logged_in %>
     <%= link_to about_path, class: 'flex-shrink-0', 'aria-label': 'アカウント' do %>
       <% if current_user.photo_url.present? %>
-        <img src="<%= current_user.photo_url %>" alt="" class="w-[34px] h-[34px] rounded-full object-cover">
+        <img src="<%= current_user.photo_url %>" alt="" class="w-[34px] h-[34px] rounded-full object-cover border border-[#E0DDD9]">
       <% else %>
-        <div class="w-[34px] h-[34px] rounded-full bg-[#5B5BD6] flex items-center justify-center text-sm text-white font-bold">
+        <div class="w-[34px] h-[34px] rounded-full border-[1.5px] border-[#5B5BD6] bg-[#FAFAF8] flex items-center justify-center text-sm text-[#5B5BD6] font-bold -rotate-2">
           <%= current_user.display_name&.first || '?' %>
         </div>
       <% end %>
     <% end %>
   <% else %>
-    <%= link_to 'ログイン →', about_path,
-          class: 'text-xs text-[#5B5BD6] font-bold flex-shrink-0' %>
+    <%= link_to 'ログイン', about_path,
+          class: 'flex-shrink-0 px-4 py-1.5 bg-[#5B5BD6] text-white text-[13px] font-bold rounded-lg -rotate-[1.5deg] hover:rotate-0 transition-transform' %>
   <% end %>
 </header>
 
 <%# ===== コンテンツ ===== %>
-<div class="flex-1 px-[18px] py-4 pb-24 flex flex-col overflow-y-auto">
+<div class="flex-1 px-5 pt-5 pb-24 flex flex-col overflow-y-auto">
 
   <%# --- 生成回数カウンタ（未ログインのみ） --- %>
   <% unless @logged_in %>
-    <div class="bg-[#F0EFEC] border border-[#E0DDD9] rounded-lg px-4 py-2.5 flex items-center justify-between">
-      <div class="flex-1 mr-3">
-        <div class="text-xs text-[#888888]">今日の残り回数</div>
-        <div class="h-1 bg-[#E0DDD9] rounded mt-1.5 overflow-hidden">
-          <div class="h-1 bg-[#5B5BD6] rounded" style="width: <%= (@gen_remaining.to_f / @daily_limit * 100).to_i %>%"></div>
+    <div class="border border-dashed border-[#C8C4B8] rounded-lg px-3.5 py-2.5 flex items-center gap-3 mb-1.5">
+      <div class="flex-1">
+        <div class="text-[11px] text-[#888888]">今日の残り回数</div>
+        <div class="h-[3px] bg-[#E0DDD9] rounded mt-1.5">
+          <div class="h-[3px] bg-[#5B5BD6] rounded" style="width: <%= (@gen_remaining.to_f / @daily_limit * 100).to_i %>%"></div>
         </div>
       </div>
-      <div class="text-sm font-bold"><%= @gen_remaining %> / <%= @daily_limit %></div>
+      <div class="text-sm font-bold tabular-nums"><%= @gen_remaining %> / <%= @daily_limit %></div>
     </div>
-    <p class="text-xs text-[#888888] mt-0.5">ログインすると無制限になります ✦</p>
+    <p class="text-[11px] text-[#888888] pl-0.5 mb-1">ログインすると無制限に</p>
   <% end %>
 
   <%# --- フォーム --- %>
   <%= form_with url: '/generations', method: :post, local: true, class: 'flex flex-col flex-1' do |f| %>
 
     <%# ジャンル %>
-    <div class="mt-[18px] mb-2 text-[11px] font-semibold text-[#888888] tracking-wider uppercase">ジャンル</div>
+    <div class="wavy-underline text-[13px] font-bold text-[#1F1F1F] mt-6 mb-3.5 self-start">ジャンル</div>
     <div class="grid grid-cols-3 gap-2">
       <% Genre.all.each_with_index do |g, i| %>
         <label class="block cursor-pointer">
-          <%= f.radio_button :genre, g[:slug], checked: i.zero?, class: 'peer hidden' %>
-          <div class="py-3 px-1.5 border border-[#E0DDD9] bg-[#FAFAF8] rounded-lg text-center transition peer-checked:bg-[#EEEDF8] peer-checked:border-[#5B5BD6]">
-            <span class="text-xl block mb-1"><%= g[:emoji] %></span>
-            <span class="text-xs font-semibold text-[#555555]"><%= g[:name] %></span>
+          <%= f.radio_button :genre, g[:slug], checked: i.zero?, class: 'peer sr-only' %>
+          <div class="relative py-3.5 px-1.5 border border-[#E0DDD9] bg-[#FAFAF8] rounded-lg text-center transition
+                      peer-checked:border-[1.5px] peer-checked:border-[#5B5BD6]
+                      peer-checked:[&_.g-icon]:text-[#5B5BD6]
+                      peer-checked:[&_.g-name]:text-[#1F1F1F]
+                      peer-checked:[&_.g-check]:opacity-100">
+            <span class="g-check absolute top-1.5 right-1.5 opacity-0 transition-opacity">
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                <path d="M1 4 L 4.5 7 L 11 1" stroke="#5B5BD6" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <div class="g-icon w-7 h-7 mx-auto mb-1.5 flex items-center justify-center text-[#555555]">
+              <%= render 'shared/genre_icon', slug: g[:slug] %>
+            </div>
+            <div class="g-name text-xs font-semibold text-[#555555]"><%= g[:name] %></div>
           </div>
         </label>
       <% end %>
     </div>
 
     <%# テーマ %>
-    <div class="mt-[18px] mb-2 flex items-center justify-between">
-      <div class="text-[11px] font-semibold text-[#888888] tracking-wider uppercase">テーマ<span class="ml-1.5 font-normal normal-case text-xs text-[#888888]">任意</span></div>
+    <div class="flex items-center justify-between mt-6 mb-3.5">
+      <div class="wavy-underline text-[13px] font-bold text-[#1F1F1F]">
+        テーマ<span class="font-normal text-[11px] text-[#888888] ml-2 bg-[#FAFAF8] relative z-10 pl-0.5">任意</span>
+      </div>
       <div class="text-[11px] text-[#888888]" data-counter-for="theme"><span data-counter-current>0</span> / 200</div>
     </div>
     <%= f.text_area :theme, rows: 2, maxlength: 200,
                     data: { counter_target: 'theme', counter_max: 200 },
                     placeholder: '例：雨の日に告白する、魔法が使えなくなった',
-                    class: 'w-full px-3.5 py-2.5 border border-[#E0DDD9] rounded-lg text-sm bg-[#FAFAF8] resize-none focus:border-[#5B5BD6] focus:outline-none placeholder:text-[#BBBBBB]' %>
+                    class: 'w-full px-3.5 py-3 border border-[#E0DDD9] rounded-lg text-sm bg-[#FAFAF8] resize-none focus:border-[#5B5BD6] focus:outline-none placeholder:text-[#BBBBBB] leading-relaxed' %>
 
     <%# キャラ設定（折りたたみ） %>
-    <div class="mt-[18px] mb-2 text-[11px] font-semibold text-[#888888] tracking-wider uppercase">
-      キャラ設定<span class="ml-1.5 font-normal normal-case text-xs text-[#888888]">任意</span>
+    <div class="wavy-underline text-[13px] font-bold text-[#1F1F1F] mt-6 mb-3.5 self-start">
+      キャラ設定<span class="font-normal text-[11px] text-[#888888] ml-2 bg-[#FAFAF8] relative z-10 pl-0.5">任意</span>
     </div>
     <details class="group">
-      <summary class="flex items-center justify-between list-none cursor-pointer px-3.5 py-2.5 bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg text-[13px] text-[#555555] hover:border-[#5B5BD6]">
-        <span>⚙ キャラ設定を入力する</span>
-        <span class="group-open:rotate-180 transition">▾</span>
+      <summary class="flex items-center justify-between list-none cursor-pointer px-3.5 py-3 bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg text-[13px] text-[#555555] hover:border-[#C8C4B8]">
+        <span>キャラ設定を入力する</span>
+        <span class="group-open:rotate-180 transition text-[#888888]">▾</span>
       </summary>
-      <div class="mt-1.5 bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg p-3.5 flex flex-col gap-2.5">
+      <div class="mt-2 bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg p-3.5 flex flex-col gap-3.5">
         <div>
-          <div class="text-xs text-[#888888] mb-1">一人称</div>
+          <div class="text-[11px] text-[#888888] mb-1.5">一人称</div>
           <div class="flex flex-wrap gap-1.5">
             <% %w[わたし あたし ぼく おれ うち わたくし].each_with_index do |v, i| %>
               <label class="cursor-pointer">
-                <%= f.radio_button :first_person, v, checked: i.zero?, class: 'peer hidden' %>
-                <span class="inline-block px-3.5 py-1.5 border border-[#E0DDD9] rounded-lg text-[13px] text-[#555555] bg-[#FAFAF8] peer-checked:bg-[#EEEDF8] peer-checked:text-[#3A3A8C] peer-checked:border-[#5B5BD6]"><%= v %></span>
+                <%= f.radio_button :first_person, v, checked: i.zero?, class: 'peer sr-only' %>
+                <span class="relative inline-block px-3.5 py-1.5 border border-[#E0DDD9] rounded-lg text-[13px] text-[#555555] bg-[#FAFAF8]
+                              peer-checked:border-[#5B5BD6] peer-checked:text-[#1F1F1F] peer-checked:font-semibold
+                              peer-checked:[&_.dot]:opacity-100"><%= v %><span class="dot absolute bottom-1 right-1 w-1 h-1 rounded-full bg-[#5B5BD6] opacity-0"></span></span>
               </label>
             <% end %>
           </div>
         </div>
         <div>
-          <div class="text-xs text-[#888888] mb-1">口調</div>
+          <div class="text-[11px] text-[#888888] mb-1.5">口調</div>
           <div class="flex flex-wrap gap-1.5">
             <% %w[指定なし ですます ため口 お嬢様 関西弁 古語・和風 ギャル].each_with_index do |v, i| %>
               <label class="cursor-pointer">
-                <%= f.radio_button :tone, v, checked: i == 1, class: 'peer hidden' %>
-                <span class="inline-block px-3.5 py-1.5 border border-[#E0DDD9] rounded-lg text-[13px] text-[#555555] bg-[#FAFAF8] peer-checked:bg-[#EEEDF8] peer-checked:text-[#3A3A8C] peer-checked:border-[#5B5BD6]"><%= v %></span>
+                <%= f.radio_button :tone, v, checked: i == 1, class: 'peer sr-only' %>
+                <span class="relative inline-block px-3.5 py-1.5 border border-[#E0DDD9] rounded-lg text-[13px] text-[#555555] bg-[#FAFAF8]
+                              peer-checked:border-[#5B5BD6] peer-checked:text-[#1F1F1F] peer-checked:font-semibold
+                              peer-checked:[&_.dot]:opacity-100"><%= v %><span class="dot absolute bottom-1 right-1 w-1 h-1 rounded-full bg-[#5B5BD6] opacity-0"></span></span>
               </label>
             <% end %>
           </div>
         </div>
         <div>
-          <div class="flex items-center justify-between mb-1">
-            <div class="text-xs text-[#888888]">キャラ設定</div>
+          <div class="flex items-center justify-between mb-1.5">
+            <div class="text-[11px] text-[#888888]">キャラ設定</div>
             <div class="text-[11px] text-[#888888]" data-counter-for="character"><span data-counter-current>0</span> / 300</div>
           </div>
           <%= f.text_area :character, rows: 2, maxlength: 300,
@@ -111,11 +131,11 @@
       </div>
     </details>
 
-    <div class="flex-1"></div>
+    <div class="flex-1 min-h-6"></div>
 
-    <%# 生成ボタン %>
-    <%= f.submit '✦ セリフを生成する',
-                 class: 'w-full py-3.5 mt-[18px] bg-[#5B5BD6] text-white rounded-lg text-[15px] font-semibold tracking-wide hover:opacity-90 cursor-pointer' %>
+    <%# 生成ボタン — ふせん風に少し傾く %>
+    <%= f.submit 'セリフを生成する',
+                 class: 'relative w-full py-3.5 mt-6 bg-[#5B5BD6] text-white rounded-lg text-[15px] font-bold tracking-[1px] hover:rotate-0 -rotate-[0.8deg] transition-transform cursor-pointer' %>
   <% end %>
 </div>
 

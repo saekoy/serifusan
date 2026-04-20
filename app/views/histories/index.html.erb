@@ -1,52 +1,76 @@
-<% content_for :title, '履歴' %>
+<% content_for :title, '生成履歴' %>
 
-<header class="flex items-center justify-between px-4 py-3 border-b border-[#E0DDD9] flex-shrink-0">
-  <h1 class="text-base font-bold">🕐 生成履歴</h1>
+<header class="flex items-end justify-between px-5 pt-7 pb-4 border-b border-[#E0DDD9] flex-shrink-0">
+  <h1 class="text-[22px] font-bold inline-flex items-center gap-2">
+    <svg viewBox="0 0 18 18" fill="none" stroke="#5B5BD6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px]">
+      <circle cx="9" cy="9" r="7"/>
+      <path d="M9 5 V 9 L 12 11"/>
+    </svg>
+    <span class="wavy-underline">生成履歴</span>
+  </h1>
   <% if @logged_in && @generations.any? %>
-    <span class="text-xs text-[#888888]"><%= @generations.size %>件</span>
+    <span class="font-mono text-[11px] text-[#888888] tracking-wider"><%= @generations.size %> items</span>
   <% end %>
 </header>
 
 <% if @logged_in %>
-  <div class="flex gap-1.5 overflow-x-auto px-4 pt-3 pb-1 flex-shrink-0">
-    <%= link_to 'すべて', histories_path,
-                class: "text-xs px-3 py-1 rounded-full border whitespace-nowrap #{@genre_filter.nil? ? 'bg-[#5B5BD6] text-white border-transparent' : 'bg-white text-[#B07BD4] border-[#EDD8FF]'}" %>
-    <% Genre.all.each do |g| %>
-      <%= link_to g[:emoji], histories_path(genre: g[:slug]),
-                  title: g[:name],
-                  class: "text-xs px-3 py-1 rounded-full border whitespace-nowrap #{@genre_filter == g[:slug] ? 'bg-[#5B5BD6] text-white border-transparent' : 'bg-white text-[#B07BD4] border-[#EDD8FF]'}" %>
+  <div class="flex-1 overflow-y-auto px-[18px] pt-4 pb-24">
+    <%# === ジャンルフィルタ === %>
+    <div class="flex gap-1.5 flex-wrap mb-4">
+      <%= link_to histories_path,
+                  class: "relative px-3 py-1.5 border rounded-lg text-[12px] bg-[#FAFAF8] #{@genre_filter.nil? ? 'border-[1.5px] border-[#5B5BD6] text-[#1F1F1F] font-bold' : 'border-[#E0DDD9] text-[#555555]'}" do %>
+        すべて<% if @genre_filter.nil? %><span class="absolute bottom-1 right-1 w-1 h-1 rounded-full bg-[#5B5BD6]"></span><% end %>
+      <% end %>
+      <% Genre.all.each do |g| %>
+        <% active = (@genre_filter == g[:slug]) %>
+        <%= link_to histories_path(genre: g[:slug]), title: g[:name],
+                    class: "relative px-3 py-1.5 border rounded-lg text-[12px] bg-[#FAFAF8] inline-flex items-center gap-1.5 #{active ? 'border-[1.5px] border-[#5B5BD6] text-[#1F1F1F] font-bold' : 'border-[#E0DDD9] text-[#555555]'}" do %>
+          <span class="w-2.5 h-2.5"><%= render 'shared/genre_icon', slug: g[:slug] %></span>
+          <%= g[:name] %>
+          <% if active %><span class="absolute bottom-1 right-1 w-1 h-1 rounded-full bg-[#5B5BD6]"></span><% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% if @generations.any? %>
+      <div class="timeline-line">
+        <ul class="flex flex-col gap-3">
+          <% latest_id = @generations.first&.id %>
+          <% @generations.each do |g| %>
+            <% genre = Genre.find(g.genre) %>
+            <li class="timeline-node <%= 'past' unless g.id == latest_id %>">
+              <%= link_to result_path(id: g.id),
+                          class: 'block bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg p-3.5 hover:border-[#C8C4B8] transition' do %>
+                <div class="flex items-center gap-2 mb-2.5">
+                  <% if genre %>
+                    <span class="text-[11px] text-[#5B5BD6] border border-[#5B5BD6] bg-[#FAFAF8] px-2 pt-0.5 pb-[3px] rounded-lg inline-flex items-center gap-1.5 -rotate-1">
+                      <span class="w-2.5 h-2.5"><%= render 'shared/genre_icon', slug: genre[:slug] %></span>
+                      <%= genre[:name] %>
+                    </span>
+                  <% end %>
+                  <span class="font-mono text-[11px] text-[#888888] tracking-wider ml-auto">
+                    <%= g.created_at.strftime('%Y / %-m / %-d  %H:%M') %>
+                  </span>
+                </div>
+                <div class="text-[13px] text-[#1F1F1F] leading-[1.6] mb-1">
+                  テーマ：<%= g.theme.presence || '（指定なし）' %>
+                </div>
+                <div class="font-mono text-[11px] text-[#888888] tracking-wider"><%= g.serifus.size %> serifu</div>
+                <div class="flex justify-end gap-1.5 mt-2.5 pt-2.5 border-t border-dashed border-[#D4D0CB]">
+                  <span class="h-7 px-3 inline-flex items-center gap-1 text-[12px] text-[#555555] border border-[#E0DDD9] rounded-lg bg-[#FAFAF8]">
+                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-3 h-3"><path d="M3 6 L 9 6"/><path d="M6 3 L 9 6 L 6 9"/></svg>
+                    結果を開く
+                  </span>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% else %>
+      <p class="text-sm text-[#888888] text-center mt-10">まだ生成履歴はありません。</p>
     <% end %>
   </div>
-
-  <% if @generations.any? %>
-    <div class="flex-1 overflow-y-auto px-4 py-4 pb-24">
-      <ul class="flex flex-col gap-3">
-        <% @generations.each do |g| %>
-          <% genre = Genre.find(g.genre) %>
-          <li>
-            <%= link_to result_path(id: g.id),
-                        class: 'block bg-white border border-[#E0DDD9] rounded-xl p-3.5 hover:border-[#5B5BD6] transition' do %>
-              <div class="flex items-center gap-2 mb-1.5">
-                <% if genre %>
-                  <span class="text-[14px] flex-shrink-0" aria-hidden="true"><%= genre[:emoji] %></span>
-                <% end %>
-                <span class="text-[12px] text-[#555555] truncate flex-1">テーマ：<%= g.theme %></span>
-                <span class="text-[11px] text-[#888888] flex-shrink-0"><%= g.created_at.strftime('%Y/%-m/%-d %H:%M') %></span>
-              </div>
-              <div class="flex items-center justify-between text-[11px] text-[#888888]">
-                <span><%= g.serifus.size %>件のセリフ</span>
-                <span class="text-[#5B5BD6]">結果を開く →</span>
-              </div>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  <% else %>
-    <div class="flex-1 px-4 py-6 text-sm text-[#888888]">
-      まだ生成履歴はありません。
-    </div>
-  <% end %>
 <% else %>
   <%= render 'shared/login_required',
              message: '過去に生成したセリフは、ログインすると履歴から見返せます。' %>
