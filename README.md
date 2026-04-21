@@ -116,6 +116,7 @@ sequenceDiagram
 | ログイン | Firebase Auth (Google) | パスワード管理を Google に任せられる |
 | テスト | RSpec（117例） | 動作を壊さず機能を足していくため |
 | 静的解析 | RuboCop | Rails流儀を外さないための機械チェック |
+| アプリ化 | PWA (manifest + Service Worker) | スマホのホーム画面に追加してアプリ風に起動できる |
 
 ---
 
@@ -152,18 +153,6 @@ bin/dev
 ```bash
 bundle exec rspec
 ```
-
----
-
-## 今後の予定
-
-- [ ] 本番環境へのデプロイ（Render + Neon）
-- [ ] PWA の有効化（manifest・Service Worker は用意済み。`<link rel="manifest">` を有効化するだけ）
-- [ ] シェア用の画像生成（OGP を生成結果から動的に作る）
-
-### 見送った機能
-
-- **X (Twitter) ログイン対応**：X Developer Portal の料金体系がポートフォリオ規模に合わなかったため、Google認証のみに絞った
 
 ---
 
