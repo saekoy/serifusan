@@ -26,14 +26,12 @@
 <div class="flex-1 px-[18px] py-4 pb-[140px] overflow-y-auto">
   <ul class="flex flex-col gap-2">
     <% @serifus.each_with_index do |serifu, i| %>
-      <li class="bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg p-3.5 flex flex-col gap-2.5 hover:border-[#C8C4B8]">
-        <div class="flex items-start gap-2.5">
-          <span class="font-mono text-[11px] font-bold text-[#888888] min-w-[22px] pt-1 tracking-wider">
-            <%= format('%02d', i + 1) %>
-          </span>
-          <p class="flex-1 text-sm leading-[1.7] text-[#1F1F1F]"><%= serifu %></p>
-        </div>
-        <div class="flex justify-end gap-1.5">
+      <li class="bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg p-3.5 flex flex-col gap-1.5 hover:border-[#C8C4B8]">
+        <span class="font-mono text-[11px] font-bold text-[#888888] tracking-wider">
+          <%= format('%02d', i + 1) %>
+        </span>
+        <p class="text-[14px] leading-[1.7] text-[#1F1F1F] break-words"><%= serifu %></p>
+        <div class="flex justify-end gap-1.5 mt-1">
           <% if @logged_in %>
             <% if @saved_serifus.include?(serifu) %>
               <span class="h-7 px-3 inline-flex items-center gap-1 text-[12px] text-[#5B5BD6] border-[1.5px] border-[#5B5BD6] rounded-lg bg-[#FAFAF8]">
@@ -69,7 +67,17 @@
     <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><path d="M3 7 L 3 4 Q 3 2, 5 2 L 10 2 Q 12 2, 12 4 L 12 10 Q 12 12, 10 12 L 7 12"/><path d="M5 5 L 2 7 L 5 9"/></svg>
     もう一回
   <% end %>
-  <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape("セリフさんで生成したセリフ\n#セリフさん") %>"
+  <% share_lines = [
+       'セリフさんで10個のセリフを作ってもらった。',
+       @theme.present? ? "テーマ：#{@theme}" : nil,
+       @genre ? "ジャンル：#{@genre[:name]}" : nil,
+       '',
+       "「#{@serifus.first}」",
+       '',
+       '#セリフさん',
+       root_url
+     ].compact.join("\n") %>
+  <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape(share_lines) %>"
      target="_blank" rel="noopener"
      class="flex-1 py-3 inline-flex items-center justify-center gap-1.5 bg-black text-white text-sm font-bold rounded-lg -rotate-[0.6deg] hover:rotate-0 transition-transform">
     <span class="font-bold">𝕏</span>

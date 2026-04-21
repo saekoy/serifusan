@@ -36,8 +36,15 @@
         <% @favorites.each do |f| %>
           <% genre = Genre.find(f.genre) %>
           <li class="bg-[#FAFAF8] border border-[#E0DDD9] rounded-lg p-3.5">
-            <div class="flex items-start gap-2.5 mb-2.5">
-              <p class="flex-1 text-sm leading-[1.7] text-[#1F1F1F]"><%= f.serifu %></p>
+            <div class="flex items-center justify-between gap-2 mb-2.5">
+              <% if genre %>
+                <div class="text-[11px] text-[#5B5BD6] border border-[#5B5BD6] bg-[#FAFAF8] px-2 pt-0.5 pb-[3px] rounded-lg inline-flex items-center gap-1.5 -rotate-1">
+                  <span class="w-2.5 h-2.5"><%= render 'shared/genre_icon', slug: genre[:slug] %></span>
+                  <%= genre[:name] %>
+                </div>
+              <% else %>
+                <span></span>
+              <% end %>
               <div class="flex gap-1.5 flex-shrink-0">
                 <button type="button"
                         class="w-7 h-7 inline-flex items-center justify-center rounded-lg border border-[#E0DDD9] bg-[#FAFAF8] text-[#888888] hover:border-[#C8C4B8]"
@@ -53,12 +60,7 @@
               </div>
             </div>
 
-            <% if genre %>
-              <div class="text-[11px] text-[#5B5BD6] border border-[#5B5BD6] bg-[#FAFAF8] px-2 pt-0.5 pb-[3px] rounded-lg inline-flex items-center gap-1.5 -rotate-1">
-                <span class="w-2.5 h-2.5"><%= render 'shared/genre_icon', slug: genre[:slug] %></span>
-                <%= genre[:name] %>
-              </div>
-            <% end %>
+            <p class="text-[14px] leading-[1.7] text-[#1F1F1F] break-words"><%= f.serifu %></p>
 
             <details class="mt-2.5">
               <summary class="text-[11px] text-[#5B5BD6] cursor-pointer list-none hover:opacity-80 inline-block">
