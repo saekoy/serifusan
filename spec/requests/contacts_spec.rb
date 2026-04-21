@@ -29,7 +29,7 @@ RSpec.describe 'Contacts', type: :request do
       expect do
         post '/contact', params: { contact: { name: '', email: 'test@example.com', body: '本文' } }
       end.not_to change(Contact, :count)
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it 'メールが空でも保存できる' do
